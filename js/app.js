@@ -25,14 +25,11 @@ import { initStory } from "./modules/story.js";
 import { initCharacters } from "./modules/characters.js";
 import { initCaptions } from "./modules/captions.js";
 
-
 // ========================================
 // SHORT DOM HELPER
 // ========================================
 
-const $ = id =>
-  document.getElementById(id);
-
+const $ = id => document.getElementById(id);
 
 // ========================================
 // PROJECT
@@ -40,6 +37,22 @@ const $ = id =>
 
 let project = loadProject();
 
+if (!project || typeof project !== "object") {
+  project = defaultProject();
+}
+
+// Make sure required arrays exist
+project.scenes = Array.isArray(project.scenes)
+  ? project.scenes
+  : [];
+
+project.characters = Array.isArray(project.characters)
+  ? project.characters
+  : [];
+
+project.captions = Array.isArray(project.captions)
+  ? project.captions
+  : [];
 
 // ========================================
 // 3D ENGINE
@@ -47,13 +60,65 @@ let project = loadProject();
 
 let studio = null;
 
-
 // ========================================
 // CURRENT SCENE
 // ========================================
 
 let currentSceneIndex = 0;
 
+// ========================================
+// PROJECT REPLACEMENT
+// IMPORTANT:
+// Keep the SAME project object reference.
+// Modules receive this object later.
+// ========================================
+
+function replaceProject(nextProject) {
+
+  if (!nextProject || typeof nextProject !== "object") {
+    return;
+  }
+
+  const fresh = {
+    ...defaultProject(),
+    ...nextProject
+  };
+
+  project.name =
+    fresh.name || "Untitled Project";
+
+  project.story =
+    fresh.story || "";
+
+  project.scenes =
+    Array.isArray(fresh.scenes)
+      ? fresh.scenes
+      : [];
+
+  project.characters =
+    Array.isArray(fresh.characters)
+      ? fresh.characters
+      : [];
+
+  project.backgrounds =
+    Array.isArray(fresh.backgrounds)
+      ? fresh.backgrounds
+      : [];
+
+  project.captions =
+    Array.isArray(fresh.captions)
+      ? fresh.captions
+      : [];
+
+  project.resolution =
+    fresh.resolution || "1280x720";
+
+  project.fps =
+    Number(fresh.fps) || 30;
+
+  project.status =
+    fresh.status || "Ready";
+}
 
 // ========================================
 // NAVIGATION
@@ -72,7 +137,6 @@ function show(pageId) {
 
     });
 
-
   document
     .querySelectorAll(".nav")
     .forEach(button => {
@@ -83,7 +147,6 @@ function show(pageId) {
       );
 
     });
-
 
   if (pageId === "preview") {
 
@@ -97,28 +160,30 @@ function show(pageId) {
 
 }
 
-
 // ========================================
 // NAV BUTTONS
 // ========================================
 
-document
-  .querySelectorAll(".nav")
-  .forEach(button => {
+function initNavigation() {
 
-    button.addEventListener(
-      "click",
-      () => {
+  document
+    .querySelectorAll(".nav")
+    .forEach(button => {
 
-        show(
-          button.dataset.page
-        );
+      button.addEventListener(
+        "click",
+        () => {
 
-      }
-    );
+          show(
+            button.dataset.page
+          );
 
-  });
+        }
+      );
 
+    });
+
+}
 
 // ========================================
 // SAVE
@@ -126,12 +191,22 @@ document
 
 function save() {
 
-  saveProject(project);
+  try {
 
-  updateStats();
+    saveProject(project);
+
+    updateStats();
+
+  } catch (error) {
+
+    console.error(
+      "Save failed:",
+      error
+    );
+
+  }
 
 }
-
 
 // ========================================
 // REFRESH ALL UI
@@ -155,33 +230,43 @@ function refresh() {
 
 }
 
-
 // ========================================
 // DASHBOARD STATS
 // ========================================
 
 function updateStats() {
 
-  const sceneCount =
-    project.scenes.length;
+  const scenes =
+    Array.isArray(project.scenes)
+      ? project.scenes
+      : [];
 
+  const characters =
+    Array.isArray(project.characters)
+      ? project.characters
+      : [];
+
+  const captions =
+    Array.isArray(project.captions)
+      ? project.captions
+      : [];
+
+  const sceneCount =
+    scenes.length;
 
   const characterCount =
-    project.characters.length;
-
+    characters.length;
 
   const captionCount =
-    project.captions.length;
-
+    captions.length;
 
   const duration =
-    project.scenes.reduce(
+    scenes.reduce(
       (total, scene) =>
         total +
         Number(scene.duration || 0),
       0
     );
-
 
   if ($("sceneCount")) {
 
@@ -190,7 +275,6 @@ function updateStats() {
 
   }
 
-
   if ($("characterCount")) {
 
     $("characterCount").textContent =
@@ -198,14 +282,12 @@ function updateStats() {
 
   }
 
-
   if ($("captionCount")) {
 
     $("captionCount").textContent =
       captionCount;
 
   }
-
 
   if ($("durationCount")) {
 
@@ -215,7 +297,6 @@ function updateStats() {
   }
 
 }
-
 
 // ========================================
 // STORY UI
@@ -232,7 +313,6 @@ function updateStory() {
 
 }
 
-
 // ========================================
 // RENDER SCENES
 // ========================================
@@ -244,21 +324,20 @@ function renderScenes() {
 
   if (!list) return;
 
-
   list.innerHTML = "";
-
 
   if (!project.scenes.length) {
 
     list.innerHTML =
-      `<div class="panel">
+      `
+      <div class="panel">
         No scenes yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
-
 
   project.scenes.forEach(
     (scene, index) => {
@@ -269,37 +348,29 @@ function renderScenes() {
       card.className =
         "scene-card";
 
-
       const content =
         document.createElement("div");
 
-
       const title =
         document.createElement("b");
-
 
       title.textContent =
         scene.title ||
         `Scene ${index + 1}`;
 
-
       const info =
         document.createElement("small");
 
-
       info.textContent =
-        `${scene.duration}s · ` +
-        `${scene.background} · ` +
-        `${scene.animation}`;
-
+        `${scene.duration || 0}s · ` +
+        `${scene.background || "day"} · ` +
+        `${scene.animation || "None"}`;
 
       const description =
         document.createElement("div");
 
-
       description.textContent =
         scene.description || "";
-
 
       content.appendChild(title);
 
@@ -309,25 +380,27 @@ function renderScenes() {
 
       content.appendChild(info);
 
-      content.appendChild(
-        document.createElement("p")
+      const paragraph =
+        document.createElement("p");
+
+      paragraph.appendChild(
+        description
       );
 
-      content.lastChild
-        .appendChild(description);
-
+      content.appendChild(
+        paragraph
+      );
 
       const buttons =
         document.createElement("div");
 
-
       const edit =
         document.createElement("button");
 
+      edit.type = "button";
 
       edit.textContent =
         "Edit";
-
 
       edit.onclick = () => {
 
@@ -340,24 +413,25 @@ function renderScenes() {
 
       };
 
-
       const deleteButton =
         document.createElement("button");
 
+      deleteButton.type = "button";
 
       deleteButton.textContent =
         "Delete";
 
-
       deleteButton.className =
         "danger";
-
 
       deleteButton.onclick = () => {
 
         if (
           !confirm(
-            `Delete ${scene.title || "this scene"}?`
+            `Delete ${
+              scene.title ||
+              "this scene"
+            }?`
           )
         ) {
 
@@ -365,12 +439,10 @@ function renderScenes() {
 
         }
 
-
         project.scenes.splice(
           index,
           1
         );
-
 
         if (
           currentSceneIndex >=
@@ -385,13 +457,11 @@ function renderScenes() {
 
         }
 
-
         save();
 
         refresh();
 
       };
-
 
       buttons.appendChild(edit);
 
@@ -399,11 +469,9 @@ function renderScenes() {
         deleteButton
       );
 
-
       card.appendChild(content);
 
       card.appendChild(buttons);
-
 
       list.appendChild(card);
 
@@ -411,7 +479,6 @@ function renderScenes() {
   );
 
 }
-
 
 // ========================================
 // RENDER CHARACTERS
@@ -424,21 +491,20 @@ function renderCharacters() {
 
   if (!list) return;
 
-
   list.innerHTML = "";
-
 
   if (!project.characters.length) {
 
     list.innerHTML =
-      `<div class="panel">
+      `
+      <div class="panel">
         No characters yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
-
 
   project.characters.forEach(
     (character, index) => {
@@ -449,40 +515,40 @@ function renderCharacters() {
       item.className =
         "item";
 
-
       const text =
         document.createElement("div");
 
+      const strong =
+        document.createElement("strong");
 
-      text.innerHTML =
-        `<strong></strong>
-         <br>
-         <small></small>`;
+      strong.textContent =
+        character.name || "Unnamed";
 
+      const br =
+        document.createElement("br");
 
-      text.querySelector(
-        "strong"
-      ).textContent =
-        character.name;
+      const small =
+        document.createElement("small");
 
+      small.textContent =
+        character.type || "human";
 
-      text.querySelector(
-        "small"
-      ).textContent =
-        character.type;
+      text.appendChild(strong);
 
+      text.appendChild(br);
+
+      text.appendChild(small);
 
       const deleteButton =
         document.createElement("button");
 
+      deleteButton.type = "button";
 
       deleteButton.textContent =
         "Delete";
 
-
       deleteButton.className =
         "danger";
-
 
       deleteButton.onclick = () => {
 
@@ -491,21 +557,20 @@ function renderCharacters() {
           1
         );
 
-
         project.scenes.forEach(
           scene => {
 
             scene.characters =
-              (scene.characters || [])
-                .filter(
-                  name =>
-                    name !==
-                    character.name
-                );
+              (
+                scene.characters || []
+              ).filter(
+                name =>
+                  name !==
+                  character.name
+              );
 
           }
         );
-
 
         save();
 
@@ -513,13 +578,11 @@ function renderCharacters() {
 
       };
 
-
       item.appendChild(text);
 
       item.appendChild(
         deleteButton
       );
-
 
       list.appendChild(item);
 
@@ -527,7 +590,6 @@ function renderCharacters() {
   );
 
 }
-
 
 // ========================================
 // RENDER CAPTIONS
@@ -540,21 +602,20 @@ function renderCaptions() {
 
   if (!list) return;
 
-
   list.innerHTML = "";
-
 
   if (!project.captions.length) {
 
     list.innerHTML =
-      `<div class="panel">
+      `
+      <div class="panel">
         No captions yet.
-      </div>`;
+      </div>
+      `;
 
     return;
 
   }
-
 
   project.captions.forEach(
     (caption, index) => {
@@ -565,28 +626,24 @@ function renderCaptions() {
       item.className =
         "item";
 
-
       const text =
         document.createElement("div");
-
 
       text.textContent =
         `${caption.start}s → ` +
         `${caption.end}s: ` +
-        caption.text;
-
+        `${caption.text}`;
 
       const deleteButton =
         document.createElement("button");
 
+      deleteButton.type = "button";
 
       deleteButton.textContent =
         "Delete";
 
-
       deleteButton.className =
         "danger";
-
 
       deleteButton.onclick = () => {
 
@@ -595,13 +652,11 @@ function renderCaptions() {
           1
         );
 
-
         save();
 
         refresh();
 
       };
-
 
       item.appendChild(text);
 
@@ -609,14 +664,12 @@ function renderCaptions() {
         deleteButton
       );
 
-
       list.appendChild(item);
 
     }
   );
 
 }
-
 
 // ========================================
 // SCENE EDITOR
@@ -629,9 +682,7 @@ function updateSceneEditor() {
 
   if (!select) return;
 
-
   select.innerHTML = "";
-
 
   project.scenes.forEach(
     (scene, index) => {
@@ -639,15 +690,12 @@ function updateSceneEditor() {
       const option =
         document.createElement("option");
 
-
       option.value =
         index;
-
 
       option.textContent =
         scene.title ||
         `Scene ${index + 1}`;
-
 
       select.appendChild(
         option
@@ -656,13 +704,11 @@ function updateSceneEditor() {
     }
   );
 
-
   if (!project.scenes.length) {
 
     return;
 
   }
-
 
   if (
     currentSceneIndex >=
@@ -674,15 +720,12 @@ function updateSceneEditor() {
 
   }
 
-
   select.value =
     currentSceneIndex;
-
 
   loadSelectedScene();
 
 }
-
 
 // ========================================
 // LOAD SELECTED SCENE
@@ -695,9 +738,7 @@ function loadSelectedScene() {
       currentSceneIndex
     ];
 
-
   if (!scene) return;
-
 
   if ($("sceneDuration")) {
 
@@ -706,14 +747,12 @@ function loadSelectedScene() {
 
   }
 
-
   if ($("cameraMode")) {
 
     $("cameraMode").value =
       scene.camera || "Static";
 
   }
-
 
   if ($("animationMode")) {
 
@@ -722,7 +761,6 @@ function loadSelectedScene() {
 
   }
 
-
   if ($("sceneDescription")) {
 
     $("sceneDescription").value =
@@ -730,14 +768,27 @@ function loadSelectedScene() {
 
   }
 
+  if (studio) {
 
-  studio?.loadScene(
-    scene,
-    project.characters
-  );
+    try {
+
+      studio.loadScene(
+        scene,
+        project.characters
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Scene loading failed:",
+        error
+      );
+
+    }
+
+  }
 
 }
-
 
 // ========================================
 // SCENE SELECT
@@ -748,13 +799,14 @@ $("sceneSelect")?.addEventListener(
   event => {
 
     currentSceneIndex =
-      Number(event.target.value);
+      Number(
+        event.target.value
+      );
 
     loadSelectedScene();
 
   }
 );
-
 
 // ========================================
 // APPLY SCENE
@@ -769,9 +821,15 @@ $("applySceneBtn")?.addEventListener(
         currentSceneIndex
       ];
 
+    if (!scene) {
 
-    if (!scene) return;
+      alert(
+        "Create a scene first."
+      );
 
+      return;
+
+    }
 
     scene.duration =
       Math.max(
@@ -781,35 +839,30 @@ $("applySceneBtn")?.addEventListener(
         ) || 10
       );
 
-
     scene.camera =
       $("cameraMode").value;
-
 
     scene.animation =
       $("animationMode").value;
 
-
     scene.description =
       $("sceneDescription").value;
 
-
     save();
+
+    loadSelectedScene();
 
     refresh();
 
   }
 );
 
-
 // ========================================
 // BACKGROUND BUTTONS
 // ========================================
 
 document
-  .querySelectorAll(
-    "[data-bg]"
-  )
+  .querySelectorAll("[data-bg]")
   .forEach(button => {
 
     button.addEventListener(
@@ -821,7 +874,6 @@ document
             currentSceneIndex
           ];
 
-
         if (!scene) {
 
           alert(
@@ -832,20 +884,19 @@ document
 
         }
 
-
         scene.background =
           button.dataset.bg;
-
 
         save();
 
         refresh();
 
+        loadSelectedScene();
+
       }
     );
 
   });
-
 
 // ========================================
 // NEW PROJECT
@@ -865,14 +916,15 @@ $("newProjectBtn")?.addEventListener(
 
     }
 
-
-    project =
-      defaultProject();
-
+    // IMPORTANT:
+    // Do NOT replace project object.
+    Object.assign(
+      project,
+      defaultProject()
+    );
 
     currentSceneIndex =
       0;
-
 
     save();
 
@@ -882,7 +934,6 @@ $("newProjectBtn")?.addEventListener(
 
   }
 );
-
 
 // ========================================
 // SAVE BUTTON
@@ -901,7 +952,6 @@ $("saveBtn")?.addEventListener(
   }
 );
 
-
 // ========================================
 // LOAD BUTTON
 // ========================================
@@ -910,23 +960,39 @@ $("loadBtn")?.addEventListener(
   "click",
   () => {
 
-    project =
-      loadProject();
+    try {
 
+      // IMPORTANT:
+      // Keep same project reference.
+      Object.assign(
+        project,
+        loadProject()
+      );
 
-    currentSceneIndex =
-      0;
+      currentSceneIndex =
+        0;
 
+      refresh();
 
-    refresh();
+      alert(
+        "Project loaded."
+      );
 
-    alert(
-      "Project loaded."
-    );
+    } catch (error) {
+
+      console.error(
+        "Load failed:",
+        error
+      );
+
+      alert(
+        "Project load failed."
+      );
+
+    }
 
   }
 );
-
 
 // ========================================
 // PROJECT NAME
@@ -944,6 +1010,9 @@ $("projectName")?.addEventListener(
   }
 );
 
+// ========================================
+// SETTINGS
+// ========================================
 
 function updateSettings() {
 
@@ -954,7 +1023,6 @@ function updateSettings() {
 
   }
 
-
   if ($("resolution")) {
 
     $("resolution").value =
@@ -962,7 +1030,6 @@ function updateSettings() {
       "1280x720";
 
   }
-
 
   if ($("fps")) {
 
@@ -973,7 +1040,6 @@ function updateSettings() {
 
 }
 
-
 // ========================================
 // EXPORT PROJECT JSON
 // ========================================
@@ -982,13 +1048,27 @@ $("exportBtn")?.addEventListener(
   "click",
   () => {
 
-    exportProjectJSON(
-      project
-    );
+    try {
+
+      exportProjectJSON(
+        project
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Project export failed:",
+        error
+      );
+
+      alert(
+        "Project export failed."
+      );
+
+    }
 
   }
 );
-
 
 // ========================================
 // VOICE
@@ -996,26 +1076,48 @@ $("exportBtn")?.addEventListener(
 
 if ($("voiceSelect")) {
 
-  populateVoices(
-    $("voiceSelect")
-  );
+  try {
+
+    populateVoices(
+      $("voiceSelect")
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Voice initialization failed:",
+      error
+    );
+
+  }
 
 }
-
 
 $("speakBtn")?.addEventListener(
   "click",
   () => {
 
+    const text =
+      $("voiceText")?.value || "";
+
+    if (!text.trim()) {
+
+      alert(
+        "Enter narration text first."
+      );
+
+      return;
+
+    }
+
     speak(
-      $("voiceText").value,
+      text,
       $("voiceSelect"),
-      $("voiceRate").value
+      $("voiceRate")?.value || 1
     );
 
   }
 );
-
 
 $("stopSpeakBtn")?.addEventListener(
   "click",
@@ -1025,7 +1127,6 @@ $("stopSpeakBtn")?.addEventListener(
 
   }
 );
-
 
 // ========================================
 // LOCAL AUDIO
@@ -1038,22 +1139,22 @@ $("audioFile")?.addEventListener(
     const file =
       event.target.files?.[0];
 
-
     if (!file) return;
-
 
     const url =
       URL.createObjectURL(
         file
       );
 
+    if ($("audioPlayer")) {
 
-    $("audioPlayer").src =
-      url;
+      $("audioPlayer").src =
+        url;
+
+    }
 
   }
 );
-
 
 // ========================================
 // 3D INITIALIZATION
@@ -1064,13 +1165,15 @@ function init3D() {
   const container =
     $("canvasWrap");
 
-
   if (!container) {
+
+    console.warn(
+      "canvasWrap not found."
+    );
 
     return;
 
   }
-
 
   try {
 
@@ -1078,7 +1181,6 @@ function init3D() {
       new Studio3D(
         container
       );
-
 
     studio.onTime =
       time => {
@@ -1093,12 +1195,10 @@ function init3D() {
 
       };
 
-
     const scene =
       project.scenes[
         currentSceneIndex
       ];
-
 
     if (scene) {
 
@@ -1109,26 +1209,24 @@ function init3D() {
 
     }
 
-  }
-
-  catch (error) {
+  } catch (error) {
 
     console.error(
       "3D initialization failed:",
       error
     );
 
-
     container.innerHTML =
-      `<div class="panel">
+      `
+      <div class="panel">
         3D engine failed to load.
         Check the browser console.
-      </div>`;
+      </div>
+      `;
 
   }
 
 }
-
 
 // ========================================
 // PREVIEW CONTROLS
@@ -1138,11 +1236,20 @@ $("playBtn")?.addEventListener(
   "click",
   () => {
 
-    studio?.play();
+    if (!studio) {
+
+      alert(
+        "3D preview is not ready."
+      );
+
+      return;
+
+    }
+
+    studio.play();
 
   }
 );
-
 
 $("pauseBtn")?.addEventListener(
   "click",
@@ -1152,7 +1259,6 @@ $("pauseBtn")?.addEventListener(
 
   }
 );
-
 
 $("resetBtn")?.addEventListener(
   "click",
@@ -1171,7 +1277,6 @@ $("resetBtn")?.addEventListener(
   }
 );
 
-
 // ========================================
 // IMPORT PROJECT
 // ========================================
@@ -1187,13 +1292,14 @@ importInput.type =
 importInput.accept =
   ".json,application/json";
 
-importInput.hidden = true;
+importInput.hidden =
+  true;
 
 document.body.appendChild(
   importInput
 );
 
-
+// Right click Load = Import
 $("loadBtn")?.addEventListener(
   "contextmenu",
   event => {
@@ -1205,7 +1311,6 @@ $("loadBtn")?.addEventListener(
   }
 );
 
-
 importInput.addEventListener(
   "change",
   async event => {
@@ -1213,30 +1318,40 @@ importInput.addEventListener(
     const file =
       event.target.files?.[0];
 
-
     if (!file) return;
-
 
     try {
 
-      project =
+      const importedProject =
         await importProjectJSON(
           file
         );
 
+      // IMPORTANT:
+      // Keep moduleContext.project
+      // pointing to same object.
+      Object.assign(
+        project,
+        importedProject
+      );
+
+      currentSceneIndex =
+        0;
 
       save();
 
       refresh();
 
-
       alert(
         "Project imported."
       );
 
-    }
+    } catch (error) {
 
-    catch (error) {
+      console.error(
+        "Import failed:",
+        error
+      );
 
       alert(
         "Import failed: " +
@@ -1245,13 +1360,11 @@ importInput.addEventListener(
 
     }
 
-
     importInput.value =
       "";
 
   }
 );
-
 
 // ========================================
 // EXPORT VIDEO
@@ -1261,11 +1374,35 @@ $("startExportBtn")?.addEventListener(
   "click",
   async () => {
 
-    await exportVideo();
+    try {
+
+      await exportVideo();
+
+    } catch (error) {
+
+      console.error(
+        "Export failed:",
+        error
+      );
+
+      const status =
+        $("exportStatus");
+
+      if (status) {
+
+        status.textContent =
+          "❌ Export failed.";
+
+      }
+
+    }
 
   }
 );
 
+// ========================================
+// RESOLUTION
+// ========================================
 
 $("resolution")?.addEventListener(
   "change",
@@ -1279,6 +1416,9 @@ $("resolution")?.addEventListener(
   }
 );
 
+// ========================================
+// FPS
+// ========================================
 
 $("fps")?.addEventListener(
   "change",
@@ -1300,7 +1440,6 @@ $("fps")?.addEventListener(
   }
 );
 
-
 // ========================================
 // WEBM EXPORT
 // ========================================
@@ -1317,14 +1456,20 @@ async function exportVideo() {
 
   }
 
+  if (!studio.renderer) {
+
+    alert(
+      "3D renderer is not ready."
+    );
+
+    return;
+
+  }
 
   const canvas =
     studio.renderer.domElement;
 
-
-  if (
-    !canvas.captureStream
-  ) {
+  if (!canvas.captureStream) {
 
     alert(
       "This browser does not support canvas recording."
@@ -1334,18 +1479,16 @@ async function exportVideo() {
 
   }
 
-
   const seconds =
     Math.max(
       0.5,
       Math.min(
         300,
         Number(
-          $("exportSeconds").value
+          $("exportSeconds")?.value
         ) || 10
       )
     );
-
 
   const fps =
     Math.max(
@@ -1353,19 +1496,16 @@ async function exportVideo() {
       Math.min(
         60,
         Number(
-          $("fps").value
+          $("fps")?.value
         ) || 30
       )
     );
 
-
   const status =
     $("exportStatus");
 
-
   const link =
     $("downloadLink");
-
 
   if (status) {
 
@@ -1374,30 +1514,28 @@ async function exportVideo() {
 
   }
 
-
   if (link) {
 
-    link.hidden = true;
+    link.hidden =
+      true;
 
   }
-
 
   studio.reset();
 
   studio.play();
-
 
   const stream =
     canvas.captureStream(
       fps
     );
 
-
   let mime =
     "video/webm";
 
-
   if (
+    typeof MediaRecorder !==
+    "undefined" &&
     MediaRecorder.isTypeSupported(
       "video/webm;codecs=vp9"
     )
@@ -1406,9 +1544,9 @@ async function exportVideo() {
     mime =
       "video/webm;codecs=vp9";
 
-  }
-
-  else if (
+  } else if (
+    typeof MediaRecorder !==
+    "undefined" &&
     MediaRecorder.isTypeSupported(
       "video/webm;codecs=vp8"
     )
@@ -1419,9 +1557,25 @@ async function exportVideo() {
 
   }
 
+  if (
+    typeof MediaRecorder ===
+    "undefined"
+  ) {
+
+    studio.pause();
+
+    if (status) {
+
+      status.textContent =
+        "WebM recording is not supported.";
+
+    }
+
+    return;
+
+  }
 
   let recorder;
-
 
   try {
 
@@ -1433,9 +1587,7 @@ async function exportVideo() {
         }
       );
 
-  }
-
-  catch (error) {
+  } catch (error) {
 
     console.error(
       error
@@ -1454,9 +1606,7 @@ async function exportVideo() {
 
   }
 
-
   const chunks = [];
-
 
   recorder.ondataavailable =
     event => {
@@ -1474,63 +1624,89 @@ async function exportVideo() {
 
     };
 
+  recorder.onerror =
+    event => {
 
-  recorder.onstop = () => {
-
-    const blob =
-      new Blob(
-        chunks,
-        {
-          type:
-            "video/webm"
-        }
+      console.error(
+        "MediaRecorder error:",
+        event
       );
 
+    };
 
-    const url =
-      URL.createObjectURL(
-        blob
-      );
+  recorder.onstop =
+    () => {
 
+      const blob =
+        new Blob(
+          chunks,
+          {
+            type:
+              "video/webm"
+          }
+        );
 
-    if (link) {
+      const url =
+        URL.createObjectURL(
+          blob
+        );
 
-      link.href =
-        url;
+      if (link) {
 
-      link.download =
-        `${project.name || "3d-animation"}.webm`;
+        link.href =
+          url;
 
-      link.textContent =
-        "⬇️ Download WebM";
+        link.download =
+          `${
+            project.name ||
+            "3d-animation"
+          }.webm`;
 
-      link.hidden =
-        false;
+        link.textContent =
+          "⬇️ Download WebM";
 
-    }
+        link.hidden =
+          false;
 
+      }
 
-    if (status) {
+      if (status) {
 
-      status.textContent =
-        "✅ WebM export complete.";
+        status.textContent =
+          "✅ WebM export complete.";
 
-    }
+      }
 
-  };
-
+    };
 
   recorder.start(
     250
   );
 
-
   setTimeout(
     () => {
 
-      studio.pause();
+      try {
 
-      recorder.stop();
+        studio.pause();
+
+        if (
+          recorder.state !==
+          "inactive"
+        ) {
+
+          recorder.stop();
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Recorder stop failed:",
+          error
+        );
+
+      }
 
     },
     seconds * 1000
@@ -1538,9 +1714,10 @@ async function exportVideo() {
 
 }
 
-
 // ========================================
-// MODULES
+// MODULE CONTEXT
+// IMPORTANT:
+// `project` object reference never changes.
 // ========================================
 
 const moduleContext = {
@@ -1557,50 +1734,115 @@ const moduleContext = {
 
 };
 
+// ========================================
+// INITIALIZE MODULES
+// ========================================
 
-// Initialize modules
+try {
 
-initDashboard(
-  moduleContext
-);
+  initDashboard(
+    moduleContext
+  );
 
-initStory(
-  moduleContext
-);
+} catch (error) {
 
-initCharacters(
-  moduleContext
-);
+  console.error(
+    "Dashboard module failed:",
+    error
+  );
 
-initCaptions(
-  moduleContext
-);
+}
 
+try {
+
+  initStory(
+    moduleContext
+  );
+
+} catch (error) {
+
+  console.error(
+    "Story module failed:",
+    error
+  );
+
+}
+
+try {
+
+  initCharacters(
+    moduleContext
+  );
+
+} catch (error) {
+
+  console.error(
+    "Characters module failed:",
+    error
+  );
+
+}
+
+try {
+
+  initCaptions(
+    moduleContext
+  );
+
+} catch (error) {
+
+  console.error(
+    "Captions module failed:",
+    error
+  );
+
+}
 
 // ========================================
 // INITIAL LOAD
 // ========================================
 
-refresh();
+function initApp() {
 
+  initNavigation();
 
-// Initialize 3D after DOM is ready
+  refresh();
 
-init3D();
+  init3D();
 
+  console.log(
+    "🎬 3D Animated Studio loaded."
+  );
+
+  console.log(
+    "Free browser-based processing."
+  );
+
+  console.log(
+    "No API keys configured."
+  );
+
+}
 
 // ========================================
-// CONSOLE MESSAGE
+// START
 // ========================================
 
-console.log(
-  "🎬 3D Animated Studio loaded."
-);
+if (
+  document.readyState ===
+  "loading"
+) {
 
-console.log(
-  "Free browser-based processing."
-);
+  document.addEventListener(
+    "DOMContentLoaded",
+    initApp,
+    {
+      once: true
+    }
+  );
 
-console.log(
-  "No API keys configured."
-);
+} else {
+
+  initApp();
+
+}
