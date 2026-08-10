@@ -1,1 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>3D Animated Studio — Free</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
 
+<body>
+
+<header class="topbar">
+  <div class="brand">🎬 3D Animated Studio</div>
+
+  <div class="top-actions">
+    <button id="newProjectBtn">New</button>
+    <button id="saveBtn">Save</button>
+    <button id="loadBtn">Load</button>
+    <button id="exportBtn" class="primary">Export WebM</button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+
+    <button class="nav active" data-page="dashboard">
+      🏠 Dashboard
+    </button>
+
+    <button class="nav" data-page="story">
+      📝 Story / Script
+    </button>
+
+    <button class="nav" data-page="scenes">
+      🎬 Story → Scenes
+    </button>
+
+    <button class="nav" data-page="characters">
+      👤 Characters
+    </button>
+
+    <button class="nav" data-page="backgrounds">
+      🌄 Backgrounds
+    </button>
+
+    <button class="nav" data-page="editor">
+      🎞️ Scene Editor
+    </button>
+
+    <button class="nav" data-page="voice">
+      🎙️ Voice / Narration
+    </button>
+
+    <button class="nav" data-page="audio">
+      🎵 Music & Sound
+    </button>
+
+    <button class="nav" data-page="captions">
+      💬 Captions
+    </button>
+
+    <button class="nav" data-page="animation">
+      ✨ Animation
+    </button>
+
+    <button class="nav" data-page="preview">
+      🎥 Video Preview
+    </button>
+
+    <button class="nav" data-page="export">
+      📤 Export
+    </button>
+
+    <button class="nav" data-page="settings">
+      ⚙️ Settings
+    </button>
+
+  </aside>
+
+
+  <main>
+
+    <!-- DASHBOARD -->
+
+    <section id="dashboard" class="page active">
+
+      <h1>Free 3D Animation Studio</h1>
+
+      <p class="muted">
+        Browser-only processing.
+        No API key, paid AI service, or backend is required.
+      </p>
+
+      <div class="cards">
+
+        <div class="card">
+          <b id="sceneCount">0</b>
+          <span>Scenes</span>
+        </div>
+
+        <div class="card">
+          <b id="characterCount">0</b>
+          <span>Characters</span>
+        </div>
+
+        <div class="card">
+          <b id="captionCount">0</b>
+          <span>Captions</span>
+        </div>
+
+        <div class="card">
+          <b id="durationCount">0s</b>
+          <span>Duration</span>
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <h2>Local AI Scene Builder</h2>
+
+        <p>
+          Type a simple prompt.
+          The local rule engine creates a scene
+          without sending anything to a server.
+        </p>
+
+        <textarea
+          id="aiPrompt"
+          placeholder="Example: a robot walks in a forest at night">
+        </textarea>
+
+        <button id="buildSceneBtn" class="primary">
+          ✨ Build Scene
+        </button>
+
+        <div id="aiStatus" class="status"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STORY -->
+
+    <section id="story" class="page">
+
+      <h2>Story / Script</h2>
+
+      <textarea
+        id="storyText"
+        class="large"
+        placeholder="Write your story here...">
+      </textarea>
+
+      <button
+        id="storyToScenesBtn"
+        class="primary">
+        Create Scenes From Story
+      </button>
+
+    </section>
+
+
+    <!-- SCENES -->
+
+    <section id="scenes" class="page">
+
+      <h2>Scenes</h2>
+
+      <div id="sceneList"></div>
+
+    </section>
+
+
+    <!-- CHARACTERS -->
+
+    <section id="characters" class="page">
+
+      <h2>Characters</h2>
+
+      <div class="row">
+
+        <input
+          id="charName"
+          placeholder="Character name">
+
+        <select id="charType">
+
+          <option value="human">
+            Human
+          </option>
+
+          <option value="robot">
+            Robot
+          </option>
+
+          <option value="animal">
+            Animal
+          </option>
+
+          <option value="bird">
+            Bird
+          </option>
+
+        </select>
+
+        <button
+          id="addCharBtn"
+          class="primary">
+          Add
+        </button>
+
+      </div>
+
+      <div id="characterList"></div>
+
+    </section>
+
+
+    <!-- BACKGROUNDS -->
+
+    <section id="backgrounds" class="page">
+
+      <h2>Backgrounds</h2>
+
+      <div class="grid-buttons">
+
+        <button data-bg="day">
+          ☀️ Day
+        </button>
+
+        <button data-bg="night">
+          🌙 Night
+        </button>
+
+        <button data-bg="forest">
+          🌲 Forest
+        </button>
+
+        <button data-bg="city">
+          🏙️ City
+        </button>
+
+        <button data-bg="space">
+          🚀 Space
+        </button>
+
+        <button data-bg="desert">
+          🏜️ Desert
+        </button>
+
+      </div>
+
+      <p class="muted">
+        Choose a background for the selected scene.
+      </p>
+
+    </section>
+
+
+    <!-- SCENE EDITOR -->
+
+    <section id="editor" class="page">
+
+      <h2>Scene Editor</h2>
+
+      <div class="panel">
+
+        <label>
+          Selected scene
+
+          <select id="sceneSelect"></select>
+
+        </label>
+
+
+        <label>
+          Duration
+
+          <input
+            id="sceneDuration"
+            type="number"
+            min="1"
+            max="120"
+            step=".5">
+
+        </label>
+
+
+        <label>
+          Camera
+
+          <select id="cameraMode">
+
+            <option>Static</option>
+            <option>Pan</option>
+            <option>Zoom</option>
+            <option>Orbit</option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+          Animation
+
+          <select id="animationMode">
+
+            <option>None</option>
+            <option>Walk</option>
+            <option>Jump</option>
+            <option>Wave</option>
+            <option>Float</option>
+            <option>Dance</option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+          Description
+
+          <textarea id="sceneDescription"></textarea>
+
+        </label>
+
+
+        <button
+          id="applySceneBtn"
+          class="primary">
+          Apply Scene
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- VOICE -->
+
+    <section id="voice" class="page">
+
+      <h2>Voice / Narration</h2>
+
+      <textarea
+        id="voiceText"
+        placeholder="Enter narration text...">
+      </textarea>
+
+
+      <div class="row">
+
+        <select id="voiceSelect"></select>
+
+
+        <label>
+          Rate
+
+          <input
+            id="voiceRate"
+            type="range"
+            min=".5"
+            max="2"
+            step=".1"
+            value="1">
+
+        </label>
+
+
+        <button id="speakBtn">
+          ▶ Speak
+        </button>
+
+        <button id="stopSpeakBtn">
+          ■ Stop
+        </button>
+
+      </div>
+
+
+      <p class="muted">
+        Uses the browser's built-in speech synthesis.
+        No API key.
+      </p>
+
+    </section>
+
+
+    <!-- AUDIO -->
+
+    <section id="audio" class="page">
+
+      <h2>Music & Sound</h2>
+
+      <input
+        id="audioFile"
+        type="file"
+        accept="audio/*">
+
+      <audio
+        id="audioPlayer"
+        controls>
+      </audio>
+
+      <p class="muted">
+        Local audio stays in your browser.
+      </p>
+
+    </section>
+
+
+    <!-- CAPTIONS -->
+
+    <section id="captions" class="page">
+
+      <h2>Captions / Subtitles</h2>
+
+      <div class="row">
+
+        <input
+          id="captionText"
+          placeholder="Caption">
+
+        <input
+          id="captionStart"
+          type="number"
+          min="0"
+          step=".1"
+          placeholder="Start">
+
+        <input
+          id="captionEnd"
+          type="number"
+          min="0"
+          step=".1"
+          placeholder="End">
+
+        <button
+          id="addCaptionBtn"
+          class="primary">
+          Add Caption
+        </button>
+
+      </div>
+
+      <div id="captionList"></div>
+
+    </section>
+
+
+    <!-- ANIMATION -->
+
+    <section id="animation" class="page">
+
+      <h2>Animation</h2>
+
+      <p>
+        Choose an animation in Scene Editor.
+        The procedural characters are animated locally
+        with Three.js.
+      </p>
+
+      <div class="panel">
+
+        <b>Available:</b>
+
+        Walk · Jump · Wave · Float · Dance ·
+        Camera Pan · Camera Zoom · Camera Orbit
+
+      </div>
+
+    </section>
+
+
+    <!-- PREVIEW -->
+
+    <section id="preview" class="page preview-page">
+
+      <h2>Video Preview</h2>
+
+      <div id="canvasWrap"></div>
+
+      <div class="transport">
+
+        <button
+          id="playBtn"
+          class="primary">
+          ▶ Play
+        </button>
+
+        <button id="pauseBtn">
+          Ⅱ Pause
+        </button>
+
+        <button id="resetBtn">
+          ↺ Reset
+        </button>
+
+        <span id="timeLabel">
+          0.0s
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- EXPORT -->
+
+    <section id="export" class="page">
+
+      <h2>Export</h2>
+
+      <p>
+        Export the 3D canvas as WebM directly
+        in the browser.
+      </p>
+
+
+      <div class="panel">
+
+        <label>
+
+          Resolution
+
+          <select id="resolution">
+
+            <option value="1280x720">
+              1280×720 (16:9)
+            </option>
+
+            <option value="1920x1080">
+              1920×1080 (16:9)
+            </option>
+
+            <option value="1080x1080">
+              1080×1080 (1:1)
+            </option>
+
+            <option value="1080x1920">
+              1080×1920 (9:16)
+            </option>
+
+            <option value="720x1280">
+              720×1280 (9:16)
+            </option>
+
+            <option value="1280x960">
+              1280×960 (4:3)
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          FPS
+
+          <input
+            id="fps"
+            type="number"
+            value="30"
+            min="10"
+            max="60">
+
+        </label>
+
+
+        <label>
+
+          Export seconds
+
+          <input
+            id="exportSeconds"
+            type="number"
+            min=".5"
+            max="300"
+            step=".5"
+            value="10">
+
+        </label>
+
+
+        <button
+          id="startExportBtn"
+          class="primary">
+          Export WebM
+        </button>
+
+
+        <div
+          id="exportStatus"
+          class="status">
+        </div>
+
+
+        <a
+          id="downloadLink"
+          hidden>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+
+    <section id="settings" class="page">
+
+      <h2>Settings</h2>
+
+      <label>
+
+        Project name
+
+        <input id="projectName">
+
+      </label>
+
+
+      <label>
+
+        Autosave
+
+        <input
+          id="autosave"
+          type="checkbox"
+          checked>
+
+      </label>
+
+
+      <div class="panel">
+
+        <b>Privacy:</b>
+
+        This project is designed to work locally.
+        The default app does not upload your story,
+        characters, or files.
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script
+  type="module"
+  src="js/app.js">
+</script>
+
+</body>
+</html>
