@@ -888,14 +888,37 @@ const characterSelect =
 
 if (characterSelect) {
 
-  const selectedCharacter =
-    Array.isArray(scene.characters) &&
-    scene.characters.length
-      ? scene.characters[0]
-      : "";
+  
+// ========================================
+// LOAD MULTIPLE SCENE CHARACTERS
+// ========================================
 
-  characterSelect.value =
-    selectedCharacter;
+const characterSelect =
+  $("sceneCharacter");
+
+if (characterSelect) {
+
+  const selectedCharacters =
+    Array.isArray(scene.characters)
+      ? scene.characters
+      : [];
+
+  Array.from(
+    characterSelect.options
+  ).forEach(
+    option => {
+
+      option.selected =
+        selectedCharacters.includes(
+          option.value
+        );
+
+    }
+  );
+
+}
+
+
 
 }
 
@@ -989,14 +1012,24 @@ $("applySceneBtn")?.addEventListener(
 // SAVE SCENE CHARACTER
 // ========================================
 
-const selectedCharacter =
-  $("sceneCharacter")?.value || "";
+// ========================================
+// SAVE MULTIPLE SCENE CHARACTERS
+// ========================================
+
+const characterSelect =
+  $("sceneCharacter");
 
 scene.characters =
-  selectedCharacter
-    ? [selectedCharacter]
+  characterSelect
+    ? Array.from(
+        characterSelect.selectedOptions
+      )
+        .map(
+          option =>
+            option.value
+        )
+        .filter(Boolean)
     : [];
-
 
     scene.camera =
       $("cameraMode").value;
