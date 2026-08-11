@@ -481,6 +481,50 @@ function renderScenes() {
 }
 
 // ========================================
+// ADD NEW SCENE
+// ========================================
+
+$("addSceneBtn")?.addEventListener(
+  "click",
+  () => {
+
+    const newScene = {
+      title:
+        `Scene ${project.scenes.length + 1}`,
+
+      duration: 5,
+
+      description: "",
+
+      background: "day",
+
+      characters: [],
+
+      dialogue: "",
+
+      camera: "Static",
+
+      animation: "None"
+    };
+
+    project.scenes.push(
+      newScene
+    );
+
+    currentSceneIndex =
+      project.scenes.length - 1;
+
+    save();
+
+    refresh();
+
+    show("editor");
+
+    loadSelectedScene();
+
+  }
+);
+// ========================================
 // RENDER CHARACTERS
 // ========================================
 
