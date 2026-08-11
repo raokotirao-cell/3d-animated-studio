@@ -858,6 +858,35 @@ function loadSelectedScene() {
     ];
 
   if (!scene) return;
+  
+// ========================================
+// LOAD SCENE CHARACTERS
+// ========================================
+
+const characterSelect =
+  $("sceneCharacter");
+
+if (characterSelect) {
+
+  const sceneCharacters =
+    Array.isArray(scene.characters)
+      ? scene.characters
+      : [];
+
+  if (sceneCharacters.length) {
+
+    characterSelect.value =
+      sceneCharacters[0];
+
+  } else {
+
+    characterSelect.value =
+      "";
+
+  }
+
+}
+
 
   if ($("sceneDuration")) {
 
