@@ -768,8 +768,51 @@ function updateSceneEditor() {
     currentSceneIndex;
 
   loadSelectedScene();
+  
+// ========================================
+// SCENE CHARACTER DROPDOWN
+// ========================================
+
+const characterSelect =
+  $("sceneCharacter");
+
+if (characterSelect) {
+
+  characterSelect.innerHTML = "";
+
+  const noneOption =
+    document.createElement("option");
+
+  noneOption.value = "";
+
+  noneOption.textContent =
+    "No Character";
+
+  characterSelect.appendChild(
+    noneOption
+  );
+
+  project.characters.forEach(
+    character => {
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        character.name;
+
+      option.textContent =
+        character.name;
+
+      characterSelect.appendChild(
+        option
+      );
+
+    }
+  );
 
 }
+
 
 // ========================================
 // LOAD SELECTED SCENE
