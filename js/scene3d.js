@@ -705,12 +705,10 @@ loadScene(
   // ONE CHARACTER PER SCENE
   // ======================================
 
-  const names =
-    Array.isArray(data.characters) &&
-    data.characters.length
-      ? data.characters.slice(0, 1)
-      : [];
-
+const names =
+Array.isArray(data.characters)
+  ? data.characters
+  : [];
   // No character assigned
   if (!names.length) {
 
