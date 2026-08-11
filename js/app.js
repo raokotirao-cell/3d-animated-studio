@@ -845,7 +845,6 @@ if (characterSelect) {
 }
 
 
-
 // ========================================
 // LOAD SELECTED SCENE
 // ========================================
@@ -853,40 +852,15 @@ if (characterSelect) {
 function loadSelectedScene() {
 
   const scene =
-    project.scenes[
-      currentSceneIndex
-    ];
+    project.scenes[currentSceneIndex];
 
-  if (!scene) return;
-  
-// ========================================
-// LOAD SCENE CHARACTERS
-// ========================================
-
-const characterSelect =
-  $("sceneCharacter");
-
-if (characterSelect) {
-
-  const sceneCharacters =
-    Array.isArray(scene.characters)
-      ? scene.characters
-      : [];
-
-  if (sceneCharacters.length) {
-
-    characterSelect.value =
-      sceneCharacters[0];
-
-  } else {
-
-    characterSelect.value =
-      "";
-
+  if (!scene) {
+    return;
   }
 
-}
-
+  // ======================================
+  // DURATION
+  // ======================================
 
   if ($("sceneDuration")) {
 
@@ -895,6 +869,10 @@ if (characterSelect) {
 
   }
 
+  // ======================================
+  // CAMERA
+  // ======================================
+
   if ($("cameraMode")) {
 
     $("cameraMode").value =
@@ -902,95 +880,9 @@ if (characterSelect) {
 
   }
 
-
-// ========================================
-// SCENE CHARACTER SELECT
-// ========================================
-
-$("sceneCharacter")?.addEventListener(
-  "change",
-  event => {
-
-    const scene =
-      project.scenes[
-        currentSceneIndex
-      ];
-
-    if (!scene) {
-      return;
-    }
-
-    // Make sure characters array exists
-    if (!Array.isArray(scene.characters)) {
-      scene.characters = [];
-    }
-
-    const selectedName =
-      event.target.value;
-
-    // No Character selected
-    if (!selectedName) {
-      return;
-    }
-
-    // Prevent duplicate character
-    if (
-      !scene.characters.includes(
-        selectedName
-      )
-    ) {
-
-      scene.characters.push(
-        selectedName
-      );
-
-    }
-
-    save();
-
-    // Reload the scene in 3D
-    loadSelectedScene();
-
-    refresh();
-
-  }
-);
-
-
-  
-// ========================================
-// LOAD MULTIPLE SCENE CHARACTERS
-// ========================================
-
-const characterSelect =
-  $("sceneCharacter");
-
-if (characterSelect) {
-
-  const selectedCharacters =
-    Array.isArray(scene.characters)
-      ? scene.characters
-      : [];
-
-  Array.from(
-    characterSelect.options
-  ).forEach(
-    option => {
-
-      option.selected =
-        selectedCharacters.includes(
-          option.value
-        );
-
-    }
-  );
-
-}
-
-
-
-}
-
+  // ======================================
+  // ANIMATION
+  // ======================================
 
   if ($("animationMode")) {
 
@@ -999,12 +891,58 @@ if (characterSelect) {
 
   }
 
+  // ======================================
+  // DESCRIPTION
+  // ======================================
+
   if ($("sceneDescription")) {
 
     $("sceneDescription").value =
       scene.description || "";
 
   }
+
+  // ======================================
+  // SCENE CHARACTERS
+  // ======================================
+
+  const characterSelect =
+    $("sceneCharacter");
+
+  if (characterSelect) {
+
+    const selectedCharacters =
+      Array.isArray(scene.characters)
+        ? scene.characters
+        : [];
+
+    // If this is a multiple-select
+    if (characterSelect.multiple) {
+
+      Array.from(
+        characterSelect.options
+      ).forEach(option => {
+
+        option.selected =
+          selectedCharacters.includes(
+            option.value
+          );
+
+      });
+
+    } else {
+
+      // Single-select fallback
+      characterSelect.value =
+        selectedCharacters[0] || "";
+
+    }
+
+  }
+
+  // ======================================
+  // LOAD INTO 3D
+  // ======================================
 
   if (studio) {
 
@@ -1027,6 +965,7 @@ if (characterSelect) {
   }
 
 }
+
 
 // ========================================
 // SCENE SELECT
@@ -1077,9 +1016,6 @@ $("applySceneBtn")?.addEventListener(
         ) || 10
       );
 
-// ========================================
-// SAVE SCENE CHARACTER
-// ========================================
 
 // ========================================
 // SAVE MULTIPLE SCENE CHARACTERS
