@@ -700,10 +700,9 @@ loadScene(
   this.setBackground(
     data.background
   );
-
-  // ======================================
-  // ONE CHARACTER PER SCENE
-  // ======================================
+// ======================================
+// MULTIPLE CHARACTERS PER SCENE
+// ======================================
 
 const names =
 Array.isArray(data.characters)
