@@ -1237,9 +1237,51 @@ studio.onTime =
         `${time.toFixed(1)}s`;
 
     }
-
+checkNextScene(time);
   };
+function checkNextScene(time) {
 
+  if (!studio || !studio.playing) {
+    return;
+  }
+
+  const scene =
+    project.scenes[currentSceneIndex];
+
+  if (!scene) {
+    return;
+  }
+
+  const duration =
+    Number(scene.duration) || 10;
+
+  if (time < duration) {
+    return;
+  }
+
+  const nextIndex =
+    currentSceneIndex + 1;
+
+  if (
+    nextIndex >=
+    project.scenes.length
+  ) {
+
+    studio.pause();
+
+    return;
+  }
+
+  currentSceneIndex =
+    nextIndex;
+
+  loadSelectedScene();
+
+  studio.reset();
+
+  studio.play();
+
+}
 
     const scene =
       project.scenes[
