@@ -715,31 +715,52 @@ Array.isArray(data.characters)
 
     return;
   }
+// ======================================
+// FIND SELECTED CHARACTER
+// ======================================
 
-  // ======================================
-  // FIND SELECTED CHARACTER
-  // ======================================
+const name =
+names[0];
 
-  const name =
-    names[0];
+const character =
+characters.find(
+c => c.name === name
+);
 
-  const character =
-    characters.find(
-      c => c.name === name
-    );
+// Character not found
+if (!character) {
 
-  // Character not found
-  if (!character) {
+  console.warn(
+    "Character not found:",
+    name
+  );
 
-    console.warn(
-      "Character not found:",
-      name
-    );
+  this.elapsed = 0;
 
-    this.elapsed = 0;
+  return;
+}
 
-    return;
-  }
+// ======================================
+// CREATE CHARACTER
+// ======================================
+
+const actor =
+this.actor(
+character.type,
+character.name
+);
+
+// Center character
+actor.position.x =
+0;
+
+this.actorGroup.add(
+actor
+);
+
+this.actors.push(
+actor
+);
 
   // ======================================
   // CREATE CHARACTER
