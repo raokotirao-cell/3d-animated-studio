@@ -874,6 +874,60 @@ function loadSelectedScene() {
   }
 
 
+// ========================================
+// SCENE CHARACTER SELECT
+// ========================================
+
+$("sceneCharacter")?.addEventListener(
+  "change",
+  event => {
+
+    const scene =
+      project.scenes[
+        currentSceneIndex
+      ];
+
+    if (!scene) {
+      return;
+    }
+
+    // Make sure characters array exists
+    if (!Array.isArray(scene.characters)) {
+      scene.characters = [];
+    }
+
+    const selectedName =
+      event.target.value;
+
+    // No Character selected
+    if (!selectedName) {
+      return;
+    }
+
+    // Prevent duplicate character
+    if (
+      !scene.characters.includes(
+        selectedName
+      )
+    ) {
+
+      scene.characters.push(
+        selectedName
+      );
+
+    }
+
+    save();
+
+    // Reload the scene in 3D
+    loadSelectedScene();
+
+    refresh();
+
+  }
+);
+
+
   
 // ========================================
 // LOAD MULTIPLE SCENE CHARACTERS
