@@ -795,43 +795,52 @@ function updateSceneEditor() {
   const characterSelect =
     $("sceneCharacter");
 
-  if (characterSelect) {
+// ========================================
+// SCENE CHARACTER DROPDOWN
+// MULTIPLE CHARACTERS
+// ========================================
 
-    characterSelect.innerHTML = "";
+const characterSelect =
+  $("sceneCharacter");
 
-    const noneOption =
-      document.createElement("option");
+if (characterSelect) {
 
-    noneOption.value =
-      "";
+  characterSelect.innerHTML = "";
 
-    noneOption.textContent =
-      "No Character";
+  const noneOption =
+    document.createElement("option");
 
-    characterSelect.appendChild(
-      noneOption
-    );
+  noneOption.value = "";
 
-    project.characters.forEach(
-      character => {
+  noneOption.textContent =
+    "No Character";
 
-        const option =
-          document.createElement("option");
+  characterSelect.appendChild(
+    noneOption
+  );
 
-        option.value =
-          character.name;
+  project.characters.forEach(
+    character => {
 
-        option.textContent =
-          character.name;
+      const option =
+        document.createElement("option");
 
-        characterSelect.appendChild(
-          option
-        );
+      option.value =
+        character.name;
 
-      }
-    );
+      option.textContent =
+        character.name;
 
-  }
+      characterSelect.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+
 
   // ======================================
   // LOAD CURRENT SCENE
