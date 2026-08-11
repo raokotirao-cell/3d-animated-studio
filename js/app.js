@@ -1229,11 +1229,6 @@ function init3D() {
     studio.onTime =
   time => {
 
-    const scene =
-      project.scenes[
-        currentSceneIndex
-      ];
-
     if ($("timeLabel")) {
 
       $("timeLabel")
@@ -1241,6 +1236,67 @@ function init3D() {
         `${time.toFixed(1)}s`;
 
     }
+
+    const scene =
+      project.scenes[
+        currentSceneIndex
+      ];
+
+    if (!scene) {
+      return;
+    }
+
+    const duration =
+      Number(scene.duration) || 10;
+
+    // Current scene finished
+    if (
+      time >= duration &&
+      studio.playing
+    ) {
+
+      const nextIndex =
+        currentSceneIndex + 1;
+
+      // More scenes available
+      if (
+        nextIndex <
+        project.scenes.length
+      ) {
+
+        currentSceneIndex =
+          nextIndex;
+
+        loadSelectedScene();
+
+        studio.reset();
+
+        studio.play();
+
+        updateSceneEditor();
+
+      }
+
+      // Last scene finished
+      else {
+
+        studio.pause();
+
+        studio.reset();
+
+        if ($("timeLabel")) {
+
+          $("timeLabel")
+            .textContent =
+            "0.0s";
+
+        }
+
+      }
+
+    }
+
+  };
 
     // ====================================
     // AUTO NEXT SCENE
