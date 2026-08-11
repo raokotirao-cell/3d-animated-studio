@@ -202,55 +202,15 @@ export class Studio3D {
 
 
     this.resize();
-    // ------------------------------------
-    // SCENE DURATION LIMIT
-    // ------------------------------------
-
-    const duration =
-      Math.max(
-        0.5,
-        Number(
-          this.sceneData?.duration
-        ) || 10
-      );
 
 
-    if (this.elapsed >= duration) {
+    // -------------------------------
+    // Render loop
+    // -------------------------------
 
-      this.elapsed =
-        duration;
-
-      this.playing =
-        false;
-
-    }
-
-
-    this.animate(
-      delta
-    );
+    this.loop();
 
   }
-
-
-  this.controls.update();
-
-
-  this.renderer.render(
-    this.scene,
-    this.camera
-  );
-
-
-  if (this.onTime) {
-
-    this.onTime(
-      this.elapsed
-    );
-
-  }
-
-}
 
 
   // ========================================
