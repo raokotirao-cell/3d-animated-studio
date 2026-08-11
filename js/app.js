@@ -724,9 +724,24 @@ function updateSceneEditor() {
   const select =
     $("sceneSelect");
 
-  if (!select) return;
+  if (!select) {
+    return;
+  }
 
   select.innerHTML = "";
+
+  // ======================================
+  // NO SCENES
+  // ======================================
+
+  if (!project.scenes.length) {
+
+    return;
+  }
+
+  // ======================================
+  // SCENE OPTIONS
+  // ======================================
 
   project.scenes.forEach(
     (scene, index) => {
@@ -748,11 +763,9 @@ function updateSceneEditor() {
     }
   );
 
-  if (!project.scenes.length) {
-
-    return;
-
-  }
+  // ======================================
+  // VALID CURRENT SCENE
+  // ======================================
 
   if (
     currentSceneIndex >=
@@ -764,54 +777,70 @@ function updateSceneEditor() {
 
   }
 
+  if (
+    currentSceneIndex < 0
+  ) {
+
+    currentSceneIndex = 0;
+
+  }
+
   select.value =
     currentSceneIndex;
 
+  // ======================================
+  // CHARACTER DROPDOWN
+  // ======================================
+
+  const characterSelect =
+    $("sceneCharacter");
+
+  if (characterSelect) {
+
+    characterSelect.innerHTML = "";
+
+    const noneOption =
+      document.createElement("option");
+
+    noneOption.value =
+      "";
+
+    noneOption.textContent =
+      "No Character";
+
+    characterSelect.appendChild(
+      noneOption
+    );
+
+    project.characters.forEach(
+      character => {
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          character.name;
+
+        option.textContent =
+          character.name;
+
+        characterSelect.appendChild(
+          option
+        );
+
+      }
+    );
+
+  }
+
+  // ======================================
+  // LOAD CURRENT SCENE
+  // ======================================
+
   loadSelectedScene();
-  
-// ========================================
-// SCENE CHARACTER DROPDOWN
-// ========================================
-
-const characterSelect =
-  $("sceneCharacter");
-
-if (characterSelect) {
-
-  characterSelect.innerHTML = "";
-
-  const noneOption =
-    document.createElement("option");
-
-  noneOption.value = "";
-
-  noneOption.textContent =
-    "No Character";
-
-  characterSelect.appendChild(
-    noneOption
-  );
-
-  project.characters.forEach(
-    character => {
-
-      const option =
-        document.createElement("option");
-
-      option.value =
-        character.name;
-
-      option.textContent =
-        character.name;
-
-      characterSelect.appendChild(
-        option
-      );
-
-    }
-  );
 
 }
+
 
 
 // ========================================
