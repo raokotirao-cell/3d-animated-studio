@@ -716,79 +716,58 @@ Array.isArray(data.characters)
     return;
   }
 // ======================================
-// FIND SELECTED CHARACTER
+// FIND AND CREATE ALL SELECTED CHARACTERS
 // ======================================
 
-const name =
-names[0];
+names.forEach(
+  (name, index) => {
 
-const character =
-characters.find(
-c => c.name === name
-);
+    const character =
+      characters.find(
+        c => c.name === name
+      );
 
-// Character not found
-if (!character) {
+    if (!character) {
 
-  console.warn(
-    "Character not found:",
-    name
-  );
+      console.warn(
+        "Character not found:",
+        name
+      );
 
-  this.elapsed = 0;
+      return;
 
-  return;
-}
+    }
 
-// ======================================
-// CREATE CHARACTER
-// ======================================
+    // ==================================
+    // CREATE CHARACTER
+    // ==================================
 
-const actor =
-this.actor(
-character.type,
-character.name
-);
+    const actor =
+      this.actor(
+        character.type,
+        character.name
+      );
 
-// Center character
-actor.position.x =
-0;
+    // ==================================
+    // POSITION CHARACTERS
+    // ==================================
 
-this.actorGroup.add(
-actor
-);
+    actor.position.x =
+      (
+        index -
+        (names.length - 1) / 2
+      ) * 2;
 
-this.actors.push(
-actor
-);
-
-  // ======================================
-  // CREATE CHARACTER
-  // ======================================
-
-  const actor =
-    this.actor(
-      character.type,
-      character.name
+    this.actorGroup.add(
+      actor
     );
 
-  // Center character
-  actor.position.x =
-    0;
+    this.actors.push(
+      actor
+    );
 
-  this.actorGroup.add(
-    actor
-  );
-
-  this.actors.push(
-    actor
-  );
-
-  // Reset scene time
-  this.elapsed = 0;
-}
-
-
+  }
+);
 
   // ========================================
   // ANIMATION
