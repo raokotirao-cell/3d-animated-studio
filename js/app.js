@@ -1241,13 +1241,12 @@ checkNextScene(time);
   };
 function checkNextScene(time) {
 
-  if (!studio || !studio.playing) {
+  if (!studio) {
     return;
   }
 
   const scene =
     project.scenes[currentSceneIndex];
-
   if (!scene) {
     return;
   }
