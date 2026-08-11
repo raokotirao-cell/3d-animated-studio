@@ -600,76 +600,82 @@ export class Studio3D {
 
   }
 
+// ========================================
+// BACKGROUND
+// REAL IMAGE + COLOR FALLBACK
+// ========================================
 
-  // ========================================
-  // BACKGROUND
-  // ========================================
+setBackground(background) {
 
-  setBackground(background) {
+  const colors = {
 
-    const colors = {
+    day: 0x87ceeb,
 
-      day: 0x87ceeb,
+    night: 0x101a3a,
 
-      night: 0x101a3a,
+    forest: 0x3b6b45,
 
-      forest: 0x3b6b45,
+    city: 0x8b95a5,
 
-      city: 0x8b95a5,
+    space: 0x05020d,
 
-      space: 0x05020d,
+    desert: 0xe8c27a
 
-      desert: 0xe8c27a
+  };
 
-    };
+  // ======================================
+  // COLOR FALLBACK
+  // ======================================
 
+  this.scene.background =
+    new THREE.Color(
+      colors[background] ??
+      colors.day
+    );
 
-    this.scene.background =
-      new THREE.Color(
-        colors[background] ??
-        colors.day
-      );
+  // ======================================
+  // GROUND FALLBACK
+  // ======================================
 
+  let groundColor =
+    0x4d7c0f;
 
-    let groundColor =
-      0x4d7c0f;
+  if (background === "desert") {
 
+    groundColor =
+      0xc2a15a;
 
-    if (background === "desert") {
+  }
 
-      groundColor =
-        0xc2a15a;
+  else if (background === "space") {
 
-    }
+    groundColor =
+      0x17122b;
 
-    else if (background === "space") {
+  }
 
-      groundColor =
-        0x17122b;
+  else if (background === "night") {
 
-    }
+    groundColor =
+      0x18223b;
 
-    else if (background === "night") {
+  }
 
-      groundColor =
-        0x18223b;
+  else if (background === "city") {
 
-    }
+    groundColor =
+      0x555b63;
 
-    else if (background === "city") {
+  }
 
-      groundColor =
-        0x555b63;
+  else if (background === "forest") {
 
-    }
+    groundColor =
+      0x28543a;
 
-    else if (background === "forest") {
+  }
 
-      groundColor =
-        0x28543a;
-
-    }
-
+  if (this.ground?.material) {
 
     this.ground.material.color.set(
       groundColor
@@ -677,6 +683,70 @@ export class Studio3D {
 
   }
 
+  // ======================================
+  // REAL BACKGROUND IMAGE
+  // ======================================
+
+  const images = {
+
+    day:
+      "./assets/backgrounds/day.jpg",
+
+    night:
+      "./assets/backgrounds/night.jpg",
+
+    forest:
+      "./assets/backgrounds/forest.jpg",
+
+    city:
+      "./assets/backgrounds/city.jpg",
+
+    space:
+      "./assets/backgrounds/space.jpg",
+
+    desert:
+      "./assets/backgrounds/desert.jpg"
+
+  };
+
+  const imagePath =
+    images[background];
+
+  if (!imagePath) {
+    return;
+  }
+
+  const loader =
+    new THREE.TextureLoader();
+
+  loader.load(
+
+    imagePath,
+
+    texture => {
+
+      this.scene.background =
+        texture;
+
+    },
+
+    undefined,
+
+    error => {
+
+      console.warn(
+        "Background image failed to load:",
+        imagePath,
+        error
+      );
+
+      // Keep color fallback.
+    }
+
+  );
+
+}
+  
 // ========================================
 // LOAD SCENE
 // ========================================
