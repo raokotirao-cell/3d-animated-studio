@@ -930,13 +930,31 @@ export class Studio3D {
 
     if (this.playing) {
 
-      this.elapsed += delta;
+  const duration =
+    Math.max(
+      0.5,
+      Number(
+        this.sceneData?.duration
+      ) || 10
+    );
 
-      this.animate(
-        delta
-      );
+  this.elapsed += delta;
 
-    }
+  if (this.elapsed >= duration) {
+
+    this.elapsed = duration;
+
+    this.animate(delta);
+
+    this.playing = false;
+
+  } else {
+
+    this.animate(delta);
+
+  }
+
+}
 
 
     this.controls.update();
