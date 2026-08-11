@@ -207,21 +207,57 @@ export class Studio3D {
     // ========================================
 // RENDER LOOP
 // ========================================
-
 loop() {
 
   requestAnimationFrame(
     () => this.loop()
   );
 
-
   const delta =
     this.clock.getDelta();
-
 
   if (this.playing) {
 
     this.elapsed += delta;
+
+    const duration =
+      Math.max(
+        0.5,
+        Number(
+          this.sceneData?.duration
+        ) || 10
+      );
+
+    if (this.elapsed >= duration) {
+
+      this.elapsed =
+        duration;
+
+      this.playing =
+        false;
+
+    }
+
+    this.animate(
+      delta
+    );
+
+  }
+
+  this.controls.update();
+
+  this.renderer.render(
+    this.scene,
+    this.camera
+  );
+
+  if (this.onTime) {
+    this.onTime(
+      this.elapsed
+    );
+  }
+
+}
 
 
     // ------------------------------------
