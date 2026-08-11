@@ -1,10 +1,7 @@
 // ========================================
 // 3D ANIMATED STUDIO
 // DASHBOARD / LOCAL SCENE BUILDER
-// NO API KEY
-// NO PAID PROCESSING
 // ========================================
-
 
 export function initDashboard({
   project,
@@ -14,40 +11,39 @@ export function initDashboard({
   show
 }) {
 
-  const buildButton =
-    $("buildSceneBtn");
-
+  const buildButton = $("buildSceneBtn");
+  const status = $("aiStatus");
 
   if (!buildButton) {
-
-    console.warn(
-      "buildSceneBtn not found."
-    );
-
+    console.warn("Dashboard: buildSceneBtn not found.");
     return;
-
   }
 
 
-  buildButton.onclick = () => {
+  // ========================================
+  // BUILD SCENE
+  // ========================================
+
+  buildButton.addEventListener("click", () => {
 
     const prompt =
-      $("aiPrompt")
-        ?.value
-        ?.trim();
+      $("aiPrompt")?.value?.trim() || "";
 
 
-    // -------------------------------
-    // Empty prompt
-    // -------------------------------
+    // ========================================
+    // VALIDATE PROMPT
+    // ========================================
 
     if (!prompt) {
 
-      $("aiStatus").textContent =
-        "Enter a scene prompt first.";
+      if (status) {
+        status.textContent =
+          "Enter a scene prompt first.";
+      }
+
+      $("aiPrompt")?.focus();
 
       return;
-
     }
 
 
@@ -55,12 +51,11 @@ export function initDashboard({
       prompt.toLowerCase();
 
 
-    // -------------------------------
-    // Detect background
-    // -------------------------------
+    // ========================================
+    // DETECT BACKGROUND
+    // ========================================
 
-    let background =
-      "day";
+    let background = "day";
 
 
     if (
@@ -70,36 +65,30 @@ export function initDashboard({
 
       background = "night";
 
-    }
-
-    else if (
+    } else if (
       text.includes("forest") ||
       text.includes("jungle")
     ) {
 
       background = "forest";
 
-    }
-
-    else if (
+    } else if (
       text.includes("city") ||
-      text.includes("street")
+      text.includes("street") ||
+      text.includes("road") ||
+      text.includes("roadside")
     ) {
 
       background = "city";
 
-    }
-
-    else if (
+    } else if (
       text.includes("space") ||
       text.includes("galaxy")
     ) {
 
       background = "space";
 
-    }
-
-    else if (
+    } else if (
       text.includes("desert")
     ) {
 
@@ -108,12 +97,11 @@ export function initDashboard({
     }
 
 
-    // -------------------------------
-    // Detect character type
-    // -------------------------------
+    // ========================================
+    // DETECT CHARACTER
+    // ========================================
 
-    let type =
-      "human";
+    let type = "human";
 
 
     if (
@@ -123,9 +111,7 @@ export function initDashboard({
 
       type = "robot";
 
-    }
-
-    else if (
+    } else if (
       text.includes("bird") ||
       text.includes("eagle") ||
       text.includes("parrot")
@@ -133,9 +119,7 @@ export function initDashboard({
 
       type = "bird";
 
-    }
-
-    else if (
+    } else if (
       text.includes("animal") ||
       text.includes("dog") ||
       text.includes("cat") ||
@@ -148,12 +132,11 @@ export function initDashboard({
     }
 
 
-    // -------------------------------
-    // Detect animation
-    // -------------------------------
+    // ========================================
+    // DETECT ANIMATION
+    // ========================================
 
-    let animation =
-      "None";
+    let animation = "None";
 
 
     if (
@@ -163,36 +146,28 @@ export function initDashboard({
 
       animation = "Walk";
 
-    }
-
-    else if (
+    } else if (
       text.includes("jump") ||
       text.includes("jumping")
     ) {
 
       animation = "Jump";
 
-    }
-
-    else if (
+    } else if (
       text.includes("wave") ||
       text.includes("waving")
     ) {
 
       animation = "Wave";
 
-    }
-
-    else if (
+    } else if (
       text.includes("dance") ||
       text.includes("dancing")
     ) {
 
       animation = "Dance";
 
-    }
-
-    else if (
+    } else if (
       text.includes("float") ||
       text.includes("floating")
     ) {
@@ -202,72 +177,68 @@ export function initDashboard({
     }
 
 
-    // -------------------------------
-    // Character name
-    // -------------------------------
+    // ========================================
+    // CHARACTER NAME
+    // ========================================
 
-    let characterName;
+    let characterName = "Hero";
 
 
     if (type === "robot") {
 
-      characterName =
-        "Robot";
+      characterName = "Robot";
 
-    }
+    } else if (type === "bird") {
 
-    else if (type === "bird") {
+      characterName = "Bird";
 
-      characterName =
-        "Bird";
+    } else if (type === "animal") {
 
-    }
-
-    else if (type === "animal") {
-
-      characterName =
-        "Animal";
-
-    }
-
-    else {
-
-      characterName =
-        "Hero";
+      characterName = "Animal";
 
     }
 
 
-    // -------------------------------
-    // Create character if needed
-    // -------------------------------
+    // ========================================
+    // SAFETY: PROJECT ARRAYS
+    // ========================================
 
-    const exists =
-      project.characters.some(
+    if (!Array.isArray(project.characters)) {
+      project.characters = [];
+    }
+
+    if (!Array.isArray(project.scenes)) {
+      project.scenes = [];
+    }
+
+
+    // ========================================
+    // CREATE CHARACTER
+    // ========================================
+
+    const existingCharacter =
+      project.characters.find(
         character =>
-          character.name ===
-          characterName
+          character.name === characterName
       );
 
 
-    if (!exists) {
+    if (!existingCharacter) {
 
       project.characters.push({
 
-        name:
-          characterName,
+        name: characterName,
 
-        type:
-          type
+        type: type
 
       });
 
     }
 
 
-    // -------------------------------
-    // Create scene
-    // -------------------------------
+    // ========================================
+    // CREATE SCENE
+    // ========================================
 
     const sceneNumber =
       project.scenes.length + 1;
@@ -304,27 +275,23 @@ export function initDashboard({
     );
 
 
-    // -------------------------------
-    // Save
-    // -------------------------------
+    // ========================================
+    // SAVE
+    // ========================================
 
     save();
 
 
-    // -------------------------------
-    // Refresh UI
-    // -------------------------------
+    // ========================================
+    // REFRESH
+    // ========================================
 
     refresh();
 
 
-    // -------------------------------
-    // Status
-    // -------------------------------
-
-    const status =
-      $("aiStatus");
-
+    // ========================================
+    // STATUS
+    // ========================================
 
     if (status) {
 
@@ -334,9 +301,23 @@ export function initDashboard({
     }
 
 
-    // -------------------------------
-    // Open Scene Editor
-    // -------------------------------
+    // ========================================
+    // CLEAR PROMPT
+    // ========================================
+
+    const promptInput =
+      $("aiPrompt");
+
+    if (promptInput) {
+
+      promptInput.value = "";
+
+    }
+
+
+    // ========================================
+    // OPEN SCENE EDITOR
+    // ========================================
 
     if (typeof show === "function") {
 
@@ -344,6 +325,11 @@ export function initDashboard({
 
     }
 
-  };
+  });
+
+
+  console.log(
+    "✅ Dashboard module initialized."
+  );
 
 }
