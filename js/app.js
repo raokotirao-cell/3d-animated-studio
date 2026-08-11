@@ -1346,12 +1346,15 @@ $("pauseBtn")?.addEventListener(
 
   }
 );
-
 $("resetBtn")?.addEventListener(
   "click",
   () => {
 
+    currentSceneIndex = 0;
+
     studio?.reset();
+
+    loadSelectedScene();
 
     if ($("timeLabel")) {
 
