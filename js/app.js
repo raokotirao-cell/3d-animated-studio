@@ -1239,51 +1239,7 @@ studio.onTime =
     }
 
   };
-    // ====================================
-    // AUTO NEXT SCENE
-    // ====================================
 
-    if (
-      studio.playing &&
-      scene &&
-      time >= Number(scene.duration || 5)
-    ) {
-
-      const nextIndex =
-        currentSceneIndex + 1;
-
-      // More scenes available
-      if (
-        nextIndex <
-        project.scenes.length
-      ) {
-
-        currentSceneIndex =
-          nextIndex;
-
-        studio.reset();
-
-        studio.loadScene(
-          project.scenes[
-            currentSceneIndex
-          ],
-          project.characters
-        );
-
-        studio.play();
-
-      } else {
-
-        // Last scene finished
-        studio.pause();
-
-        studio.reset();
-
-      }
-
-    }
-
-  };
 
     const scene =
       project.scenes[
