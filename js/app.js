@@ -879,14 +879,6 @@ function loadSelectedScene() {
 
   }
 
-// ========================================
-// LOAD SCENE CHARACTER
-// ========================================
-
-const characterSelect =
-  $("sceneCharacter");
-
-if (characterSelect) {
 
   
 // ========================================
