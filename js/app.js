@@ -788,12 +788,6 @@ function updateSceneEditor() {
   select.value =
     currentSceneIndex;
 
-  // ======================================
-  // CHARACTER DROPDOWN
-  // ======================================
-
-  const characterSelect =
-    $("sceneCharacter");
 
 // ========================================
 // SCENE CHARACTER DROPDOWN
