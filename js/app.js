@@ -870,6 +870,27 @@ function loadSelectedScene() {
 
   }
 
+// ========================================
+// LOAD SCENE CHARACTER
+// ========================================
+
+const characterSelect =
+  $("sceneCharacter");
+
+if (characterSelect) {
+
+  const selectedCharacter =
+    Array.isArray(scene.characters) &&
+    scene.characters.length
+      ? scene.characters[0]
+      : "";
+
+  characterSelect.value =
+    selectedCharacter;
+
+}
+
+
   if ($("animationMode")) {
 
     $("animationMode").value =
@@ -954,6 +975,19 @@ $("applySceneBtn")?.addEventListener(
           $("sceneDuration").value
         ) || 10
       );
+
+// ========================================
+// SAVE SCENE CHARACTER
+// ========================================
+
+const selectedCharacter =
+  $("sceneCharacter")?.value || "";
+
+scene.characters =
+  selectedCharacter
+    ? [selectedCharacter]
+    : [];
+
 
     scene.camera =
       $("cameraMode").value;
