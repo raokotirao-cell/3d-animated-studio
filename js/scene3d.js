@@ -677,92 +677,99 @@ export class Studio3D {
 
   }
 
+// ========================================
+// LOAD SCENE
+// ========================================
 
-  // ========================================
-  // LOAD SCENE
-  // ========================================
+loadScene(
+  data,
+  characters
+) {
 
-  loadScene(
-    data,
-    characters
-  ) {
+  if (!data) {
+    return;
+  }
 
-    if (!data) {
-      return;
-    }
+  this.sceneData =
+    data;
 
+  // Clear previous scene
+  this.clear();
 
-    this.sceneData =
-      data;
+  // Set background
+  this.setBackground(
+    data.background
+  );
 
+  // ======================================
+  // ONE CHARACTER PER SCENE
+  // ======================================
 
-    this.clear();
+  const names =
+    Array.isArray(data.characters) &&
+    data.characters.length
+      ? data.characters.slice(0, 1)
+      : [];
 
-
-    this.setBackground(
-      data.background
-    );
-
-
-    const names =
-      data.characters &&
-      data.characters.length
-        ? data.characters
-        : characters
-            .map(c => c.name)
-            .slice(0, 3);
-
-
-    names.forEach(
-      (name, index) => {
-
-        const character =
-          characters.find(
-            c => c.name === name
-          ) ||
-          characters[
-            index %
-            Math.max(
-              characters.length,
-              1
-            )
-          ] ||
-          {
-            name: "Hero",
-            type: "human"
-          };
-
-
-        const actor =
-          this.actor(
-            character.type,
-            character.name
-          );
-
-
-        actor.position.x =
-          (
-            index -
-            (names.length - 1) / 2
-          ) * 2;
-
-
-        this.actorGroup.add(
-          actor
-        );
-
-
-        this.actors.push(
-          actor
-        );
-
-      }
-    );
-
+  // No character assigned
+  if (!names.length) {
 
     this.elapsed = 0;
 
+    return;
   }
+
+  // ======================================
+  // FIND SELECTED CHARACTER
+  // ======================================
+
+  const name =
+    names[0];
+
+  const character =
+    characters.find(
+      c => c.name === name
+    );
+
+  // Character not found
+  if (!character) {
+
+    console.warn(
+      "Character not found:",
+      name
+    );
+
+    this.elapsed = 0;
+
+    return;
+  }
+
+  // ======================================
+  // CREATE CHARACTER
+  // ======================================
+
+  const actor =
+    this.actor(
+      character.type,
+      character.name
+    );
+
+  // Center character
+  actor.position.x =
+    0;
+
+  this.actorGroup.add(
+    actor
+  );
+
+  this.actors.push(
+    actor
+  );
+
+  // Reset scene time
+  this.elapsed = 0;
+}
+
 
 
   // ========================================
