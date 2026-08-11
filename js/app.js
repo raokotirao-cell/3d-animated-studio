@@ -1226,7 +1226,8 @@ function init3D() {
         container
       );
 
-    studio.onTime =
+    
+studio.onTime =
   time => {
 
     if ($("timeLabel")) {
@@ -1237,67 +1238,7 @@ function init3D() {
 
     }
 
-    const scene =
-      project.scenes[
-        currentSceneIndex
-      ];
-
-    if (!scene) {
-      return;
-    }
-
-    const duration =
-      Number(scene.duration) || 10;
-
-    // Current scene finished
-    if (
-      time >= duration &&
-      studio.playing
-    ) {
-
-      const nextIndex =
-        currentSceneIndex + 1;
-
-      // More scenes available
-      if (
-        nextIndex <
-        project.scenes.length
-      ) {
-
-        currentSceneIndex =
-          nextIndex;
-
-        loadSelectedScene();
-
-        studio.reset();
-
-        studio.play();
-
-        updateSceneEditor();
-
-      }
-
-      // Last scene finished
-      else {
-
-        studio.pause();
-
-        studio.reset();
-
-        if ($("timeLabel")) {
-
-          $("timeLabel")
-            .textContent =
-            "0.0s";
-
-        }
-
-      }
-
-    }
-
   };
-
     // ====================================
     // AUTO NEXT SCENE
     // ====================================
