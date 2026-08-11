@@ -139,7 +139,10 @@ export function initStory({
               detectAnimation(text),
 
             characters:
-              []
+  detectCharacters(
+    text,
+    project.characters
+  )
 
           };
 
@@ -352,4 +355,43 @@ function detectAnimation(text) {
 
   return "None";
 
+}
+// ========================================
+// CHARACTER DETECTOR
+// ========================================
+
+function detectCharacters(
+  text,
+  characters
+) {
+
+  if (
+    !Array.isArray(characters) ||
+    !characters.length
+  ) {
+    return [];
+  }
+
+  const value =
+    text.toLowerCase();
+
+  return characters
+    .filter(character => {
+
+      if (
+        !character ||
+        !character.name
+      ) {
+        return false;
+      }
+
+      return value.includes(
+        character.name.toLowerCase()
+      );
+
+    })
+    .map(
+      character =>
+        character.name
+    );
 }
