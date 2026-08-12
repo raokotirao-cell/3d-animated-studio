@@ -2041,19 +2041,61 @@ $("create3DCharacterBtn")?.addEventListener(
       $("builderCostume")?.value ||
       "casual";
 
+    const name =
+      prompt(
+        "Enter character name:"
+      )?.trim();
+
+    if (!name) {
+      return;
+    }
+
+    // Prevent duplicate names
+    const exists =
+      project.characters.some(
+        character =>
+          character.name.toLowerCase() ===
+          name.toLowerCase()
+      );
+
+    if (exists) {
+
+      alert(
+        "This character already exists."
+      );
+
+      return;
+    }
+
+    // Add custom 3D character
+    project.characters.push({
+
+      name,
+
+      type,
+
+      costume
+
+    });
+
+    save();
+
+    refresh();
+
     const status =
       $("characterBuilderStatus");
 
     if (status) {
 
       status.textContent =
-        `3D ${type} character with ${costume} costume selected.`;
+        `${name} created successfully — ${type} / ${costume}`;
 
     }
 
     console.log(
-      "3D Character Builder:",
+      "3D Character Created:",
       {
+        name,
         type,
         costume
       }
