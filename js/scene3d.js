@@ -803,7 +803,8 @@ if (
 
   }
 
-  // ========================================
+
+// ========================================
 // 3D CARTOON HUMAN
 // ========================================
 
@@ -813,19 +814,26 @@ cartoonHuman(name, costume = "casual") {
 
   group.name = name || "Cartoon Human";
 
-  // ----------------------------------------
+  // ======================================
   // MATERIALS
-  // ----------------------------------------
+  // ======================================
 
-  const skin = new THREE.MeshStandardMaterial({
-    color: 0xffc7a3,
-    roughness: 0.8
-  });
+  const skinMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0xffc7a3,
+      roughness: 0.75
+    });
 
-  const hair = new THREE.MeshStandardMaterial({
-    color: 0x3b2418,
-    roughness: 0.8
-  });
+  const hairMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0x3b2418,
+      roughness: 0.8
+    });
+
+  const blackMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0x111111
+    });
 
   let clothesColor = 0x2563eb;
 
@@ -838,7 +846,7 @@ cartoonHuman(name, costume = "casual") {
   }
 
   if (costume === "doctor") {
-    clothesColor = 0xf8fafc;
+    clothesColor = 0xffffff;
   }
 
   if (costume === "traditional") {
@@ -849,39 +857,34 @@ cartoonHuman(name, costume = "casual") {
     clothesColor = 0xdc2626;
   }
 
-  const clothes =
+  const clothesMaterial =
     new THREE.MeshStandardMaterial({
       color: clothesColor,
       roughness: 0.7
     });
 
-  const black =
-    new THREE.MeshStandardMaterial({
-      color: 0x111111
-    });
-
-  // ----------------------------------------
+  // ======================================
   // BODY
-  // ----------------------------------------
+  // ======================================
 
   const body =
     new THREE.Mesh(
       new THREE.CapsuleGeometry(
-        0.55,
+        0.52,
         0.9,
         8,
         16
       ),
-      clothes
+      clothesMaterial
     );
 
   body.position.y = 1.35;
 
   group.add(body);
 
-  // ----------------------------------------
+  // ======================================
   // HEAD
-  // ----------------------------------------
+  // ======================================
 
   const head =
     new THREE.Mesh(
@@ -890,47 +893,47 @@ cartoonHuman(name, costume = "casual") {
         24,
         20
       ),
-      skin
+      skinMaterial
     );
 
   head.position.y = 2.35;
 
   group.add(head);
 
-  // ----------------------------------------
+  // ======================================
   // HAIR
-  // ----------------------------------------
+  // ======================================
 
-  const hairTop =
+  const hair =
     new THREE.Mesh(
       new THREE.SphereGeometry(
         0.64,
         24,
         16
       ),
-      hair
+      hairMaterial
     );
 
-  hairTop.scale.set(
+  hair.scale.set(
     1,
     0.55,
     1
   );
 
-  hairTop.position.y = 2.72;
+  hair.position.y = 2.72;
 
-  group.add(hairTop);
+  group.add(hair);
 
-  // ----------------------------------------
+  // ======================================
   // EYES
-  // ----------------------------------------
+  // ======================================
 
   [-0.22, 0.22].forEach(x => {
 
-    const eye =
+    const eyeWhite =
       new THREE.Mesh(
         new THREE.SphereGeometry(
-          0.12,
+          0.13,
           16,
           12
         ),
@@ -939,37 +942,37 @@ cartoonHuman(name, costume = "casual") {
         })
       );
 
-    eye.position.set(
+    eyeWhite.position.set(
       x,
-      2.4,
+      2.38,
       0.55
     );
 
-    group.add(eye);
+    group.add(eyeWhite);
 
     const pupil =
       new THREE.Mesh(
         new THREE.SphereGeometry(
-          0.055,
+          0.06,
           12,
           8
         ),
-        black
+        blackMaterial
       );
 
     pupil.position.set(
       x,
-      2.4,
-      0.65
+      2.38,
+      0.66
     );
 
     group.add(pupil);
 
   });
 
-  // ----------------------------------------
+  // ======================================
   // NOSE
-  // ----------------------------------------
+  // ======================================
 
   const nose =
     new THREE.Mesh(
@@ -978,20 +981,49 @@ cartoonHuman(name, costume = "casual") {
         12,
         8
       ),
-      skin
+      skinMaterial
     );
 
   nose.position.set(
     0,
     2.25,
-    0.61
+    0.62
   );
 
   group.add(nose);
 
-  // ----------------------------------------
+  // ======================================
+  // MOUTH
+  // ======================================
+
+  const mouth =
+    new THREE.Mesh(
+      new THREE.TorusGeometry(
+        0.12,
+        0.025,
+        8,
+        16,
+        Math.PI
+      ),
+      new THREE.MeshStandardMaterial({
+        color: 0x7f1d1d
+      })
+    );
+
+  mouth.rotation.x =
+    Math.PI;
+
+  mouth.position.set(
+    0,
+    2.08,
+    0.61
+  );
+
+  group.add(mouth);
+
+  // ======================================
   // ARMS
-  // ----------------------------------------
+  // ======================================
 
   [-1, 1].forEach(side => {
 
@@ -1003,7 +1035,7 @@ cartoonHuman(name, costume = "casual") {
           6,
           10
         ),
-        clothes
+        clothesMaterial
       );
 
     arm.position.set(
@@ -1019,9 +1051,35 @@ cartoonHuman(name, costume = "casual") {
 
   });
 
-  // ----------------------------------------
+  // ======================================
+  // HANDS
+  // ======================================
+
+  [-1, 1].forEach(side => {
+
+    const hand =
+      new THREE.Mesh(
+        new THREE.SphereGeometry(
+          0.15,
+          16,
+          12
+        ),
+        skinMaterial
+      );
+
+    hand.position.set(
+      side * 0.76,
+      0.98,
+      0
+    );
+
+    group.add(hand);
+
+  });
+
+  // ======================================
   // LEGS
-  // ----------------------------------------
+  // ======================================
 
   [-1, 1].forEach(side => {
 
@@ -1033,7 +1091,7 @@ cartoonHuman(name, costume = "casual") {
           6,
           10
         ),
-        black
+        blackMaterial
       );
 
     leg.position.set(
@@ -1046,9 +1104,9 @@ cartoonHuman(name, costume = "casual") {
 
   });
 
-  // ----------------------------------------
+  // ======================================
   // SHOES
-  // ----------------------------------------
+  // ======================================
 
   [-1, 1].forEach(side => {
 
@@ -1059,13 +1117,13 @@ cartoonHuman(name, costume = "casual") {
           16,
           10
         ),
-        black
+        blackMaterial
       );
 
     shoe.scale.set(
-      1.25,
+      1.3,
       0.55,
-      1.5
+      1.6
     );
 
     shoe.position.set(
@@ -1078,43 +1136,61 @@ cartoonHuman(name, costume = "casual") {
 
   });
 
-  // ----------------------------------------
-  // POLICE CAP
-  // ----------------------------------------
+  // ======================================
+  // POLICE COSTUME
+  // ======================================
 
   if (costume === "police") {
 
     const cap =
       new THREE.Mesh(
         new THREE.CylinderGeometry(
-          0.5,
+          0.48,
           0.55,
           0.16,
-          20
+          24
         ),
-        clothes
+        clothesMaterial
       );
 
     cap.position.y = 2.92;
 
     group.add(cap);
 
+    const badge =
+      new THREE.Mesh(
+        new THREE.CircleGeometry(
+          0.10,
+          16
+        ),
+        new THREE.MeshStandardMaterial({
+          color: 0xfacc15
+        })
+      );
+
+    badge.position.set(
+      0,
+      1.45,
+      0.53
+    );
+
+    group.add(badge);
   }
 
-  // ----------------------------------------
-  // DOCTOR COAT
-  // ----------------------------------------
+  // ======================================
+  // DOCTOR COSTUME
+  // ======================================
 
   if (costume === "doctor") {
 
     const coat =
       new THREE.Mesh(
         new THREE.BoxGeometry(
-          0.72,
-          0.9,
+          0.82,
+          0.95,
           0.12
         ),
-        clothes
+        clothesMaterial
       );
 
     coat.position.set(
@@ -1127,8 +1203,91 @@ cartoonHuman(name, costume = "casual") {
 
   }
 
+  // ======================================
+  // SCHOOL COSTUME
+  // ======================================
+
+  if (costume === "school") {
+
+    const tie =
+      new THREE.Mesh(
+        new THREE.BoxGeometry(
+          0.10,
+          0.42,
+          0.04
+        ),
+        new THREE.MeshStandardMaterial({
+          color: 0xdc2626
+        })
+      );
+
+    tie.position.set(
+      0,
+      1.65,
+      0.53
+    );
+
+    group.add(tie);
+
+  }
+
+  // ======================================
+  // TRADITIONAL COSTUME
+  // ======================================
+
+  if (costume === "traditional") {
+
+    body.scale.x = 1.08;
+
+    const belt =
+      new THREE.Mesh(
+        new THREE.BoxGeometry(
+          1.05,
+          0.12,
+          0.65
+        ),
+        new THREE.MeshStandardMaterial({
+          color: 0xfacc15
+        })
+      );
+
+    belt.position.y = 1.08;
+
+    group.add(belt);
+
+  }
+
+  // ======================================
+  // SPORTS COSTUME
+  // ======================================
+
+  if (costume === "sports") {
+
+    const number =
+      new THREE.Mesh(
+        new THREE.PlaneGeometry(
+          0.28,
+          0.35
+        ),
+        new THREE.MeshStandardMaterial({
+          color: 0xffffff
+        })
+      );
+
+    number.position.set(
+      0,
+      1.42,
+      0.54
+    );
+
+    group.add(number);
+
+  }
+
   return group;
 }
+
+
 // ========================================
 // BACKGROUND
 // REAL IMAGE + COLOR FALLBACK
