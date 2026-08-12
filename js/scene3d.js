@@ -8,7 +8,8 @@ import * as THREE from
 
 import { OrbitControls } from
   "https://unpkg.com/three@0.178.0/examples/jsm/controls/OrbitControls.js";
-
+import { GLTFLoader } from
+"https://unpkg.com/three@0.178.0/examples/jsm/loaders/GLTFLoader.js";
 
 export class Studio3D {
 
@@ -150,7 +151,7 @@ export class Studio3D {
 
     this.actors = [];
 
-
+this.gltfLoader = new GLTFLoader();
     // -------------------------------
     // Ground
     // -------------------------------
@@ -277,6 +278,80 @@ this.backgroundTextures = {};
   // ========================================
 
   actor(type, name, costume) {
+
+  // ========================================
+  // FARMER GLB CHARACTER
+  // ========================================
+
+  if (costume === "farmer") {
+
+    const group =
+      new THREE.Group();
+
+    group.name =
+      name || "Farmer";
+
+    this.gltfLoader.load(
+
+      "./assets/characters/farmer/model.glb",
+
+      gltf => {
+
+        const model =
+          gltf.scene;
+
+        model.scale.set(
+          1,
+          1,
+          1
+        );
+
+        model.position.set(
+          0,
+          0,
+          0
+        );
+
+        group.add(
+          model
+        );
+
+      },
+
+      undefined,
+
+      error => {
+
+        console.error(
+          "Farmer model failed to load:",
+          error
+        );
+
+      }
+
+    );
+
+    return group;
+  }
+
+
+  // ========================================
+  // EXISTING ACTOR CODE
+  // ========================================
+
+  if (
+    type === "human" ||
+    type === "female" ||
+    type === "child"
+  ) {
+
+    return this.cartoonHuman(
+      name,
+      costume || "casual",
+      type
+    );
+
+  }
 
   // ========================================
   // CARTOON HUMAN
