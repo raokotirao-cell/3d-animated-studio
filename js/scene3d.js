@@ -598,7 +598,144 @@ this.backgroundTextures = {};
       }
 
     }
+// ====================================
+// COSTUME
+// ====================================
 
+if (
+  type === "human" ||
+  type === "female" ||
+  type === "child"
+) {
+
+  let costumeColor =
+    0x2563eb;
+
+  if (costume === "school") {
+
+    costumeColor =
+      0x1e3a8a;
+
+  }
+
+  else if (costume === "police") {
+
+    costumeColor =
+      0x172554;
+
+  }
+
+  else if (costume === "doctor") {
+
+    costumeColor =
+      0xf8fafc;
+
+  }
+
+  else if (costume === "traditional") {
+
+    costumeColor =
+      0x9333ea;
+
+  }
+
+  else if (costume === "sports") {
+
+    costumeColor =
+      0xdc2626;
+
+  }
+
+  else if (costume === "casual") {
+
+    costumeColor =
+      0x2563eb;
+
+  }
+
+
+  const costumeMaterial =
+    new THREE.MeshStandardMaterial({
+      color: costumeColor
+    });
+
+
+  // Shirt / Dress layer
+
+  const costumeBody =
+    new THREE.Mesh(
+      new THREE.CapsuleGeometry(
+        0.46,
+        0.75,
+        8,
+        16
+      ),
+      costumeMaterial
+    );
+
+  costumeBody.position.y =
+    1.35;
+
+  group.add(
+    costumeBody
+  );
+
+
+  // School / Police cap
+
+  if (
+    costume === "school" ||
+    costume === "police"
+  ) {
+
+    const cap =
+      new THREE.Mesh(
+        new THREE.CylinderGeometry(
+          0.46,
+          0.46,
+          0.12,
+          16
+        ),
+        costumeMaterial
+      );
+
+    cap.position.y =
+      2.78;
+
+    group.add(
+      cap
+    );
+
+  }
+
+
+  // Doctor coat front
+
+  if (costume === "doctor") {
+
+    const coat =
+      new THREE.Mesh(
+        new THREE.BoxGeometry(
+          0.65,
+          0.9,
+          0.08
+        ),
+        costumeMaterial
+      );
+
+    coat.position.set(
+      0,
+      1.4,
+      0.43
+    );
+
+    group.add(
+      coat
+    );
+
+  }
+
+}
 
     return group;
 
