@@ -2025,6 +2025,42 @@ try {
   );
 
 }
+// ========================================
+// 3D CHARACTER BUILDER
+// ========================================
+
+$("create3DCharacterBtn")?.addEventListener(
+  "click",
+  () => {
+
+    const type =
+      $("builderCharacterType")?.value ||
+      "human";
+
+    const costume =
+      $("builderCostume")?.value ||
+      "casual";
+
+    const status =
+      $("characterBuilderStatus");
+
+    if (status) {
+
+      status.textContent =
+        `3D ${type} character with ${costume} costume selected.`;
+
+    }
+
+    console.log(
+      "3D Character Builder:",
+      {
+        type,
+        costume
+      }
+    );
+
+  }
+);
 
 try {
 
