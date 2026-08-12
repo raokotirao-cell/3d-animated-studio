@@ -296,7 +296,25 @@ this.backgroundTextures = {};
   }
     const group =
       new THREE.Group();
+// ========================================
+// CHARACTER VARIANT
+// ========================================
 
+let scaleX = 1;
+let scaleY = 1;
+let scaleZ = 1;
+
+if (type === "female") {
+  scaleX = 0.92;
+  scaleY = 1.02;
+  scaleZ = 0.92;
+}
+
+if (type === "child") {
+  scaleX = 0.78;
+  scaleY = 0.78;
+  scaleZ = 0.78;
+}
     group.name =
       name || "Character";
 
@@ -798,11 +816,14 @@ if (
   }
 
 }
-
-    return group;
+    group.scale.set(
+  scaleX,
+  scaleY,
+  scaleZ
+);
+return group;
 
   }
-
 
 // ========================================
 // 3D CARTOON HUMAN
