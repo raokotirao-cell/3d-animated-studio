@@ -189,7 +189,11 @@ export class Studio3D {
     this.playing = false;
 
     this.sceneData = null;
+// ========================================
+// BACKGROUND TEXTURE CACHE
+// ========================================
 
+this.backgroundTextures = {};
 
     // -------------------------------
     // Resize
