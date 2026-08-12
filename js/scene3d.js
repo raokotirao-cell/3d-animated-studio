@@ -495,23 +495,33 @@ if (type === "child") {
       }
 
 
-      const head =
-        new THREE.Mesh(
-          new THREE.SphereGeometry(
-            0.48,
-            16,
-            12
-          ),
-          material
-        );
+      // ======================================
+// CARTOON HEAD
+// ======================================
 
-      head.position.set(
-        0,
-        1.55,
-        0.55
-      );
+const head =
+  new THREE.Mesh(
+    new THREE.SphereGeometry(
+      0.62,
+      32,
+      24
+    ),
+    skinMaterial
+  );
 
-      group.add(head);
+head.scale.set(
+  0.95,
+  1.05,
+  0.92
+);
+
+head.position.set(
+  0,
+  2.35,
+  0
+);
+
+group.add(head);
 
     }
 
