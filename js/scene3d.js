@@ -988,9 +988,6 @@ this.elapsed = 0;
 
     }
 
-
-    this.camera.updateProjectionMatrix();
-
   }
 
 
