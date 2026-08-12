@@ -276,7 +276,7 @@ this.backgroundTextures = {};
   // CREATE CHARACTER
   // ========================================
 
-  actor(type, name) {
+  actor(type, name, costume) {
 
     const group =
       new THREE.Group();
@@ -815,12 +815,13 @@ names.forEach(
     // ==================================
     // CREATE CHARACTER
     // ==================================
-
-    const actor =
-      this.actor(
-        character.type,
-        character.name
-      );
+const actor =
+  this.actor(
+    character.type,
+    character.name,
+    character.costume
+  );
+    
 
     // ==================================
     // POSITION CHARACTERS
