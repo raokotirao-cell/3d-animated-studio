@@ -290,7 +290,8 @@ this.backgroundTextures = {};
 
     return this.cartoonHuman(
       name,
-      costume || "casual"
+      costume || "casual",
+      type
     );
 
   }
@@ -829,11 +830,38 @@ return group;
 // 3D CARTOON HUMAN
 // ========================================
 
-cartoonHuman(name, costume = "casual") {
+cartoonHuman(
+  name,
+  costume = "casual",
+  type = "human"
+) {
 
   const group = new THREE.Group();
 
   group.name = name || "Cartoon Human";
+  // ======================================
+// CHARACTER PROPORTIONS
+// ======================================
+
+if (type === "female") {
+
+  group.scale.set(
+    0.92,
+    1.04,
+    0.92
+  );
+
+}
+
+else if (type === "child") {
+
+  group.scale.set(
+    0.78,
+    0.78,
+    0.78
+  );
+
+}
 
   // ======================================
   // MATERIALS
