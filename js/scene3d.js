@@ -278,6 +278,22 @@ this.backgroundTextures = {};
 
   actor(type, name, costume) {
 
+  // ========================================
+  // CARTOON HUMAN
+  // ========================================
+
+  if (
+    type === "human" ||
+    type === "female" ||
+    type === "child"
+  ) {
+
+    return this.cartoonHuman(
+      name,
+      costume || "casual"
+    );
+
+  }
     const group =
       new THREE.Group();
 
