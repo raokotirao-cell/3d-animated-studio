@@ -787,6 +787,332 @@ if (
 
   }
 
+  // ========================================
+// 3D CARTOON HUMAN
+// ========================================
+
+cartoonHuman(name, costume = "casual") {
+
+  const group = new THREE.Group();
+
+  group.name = name || "Cartoon Human";
+
+  // ----------------------------------------
+  // MATERIALS
+  // ----------------------------------------
+
+  const skin = new THREE.MeshStandardMaterial({
+    color: 0xffc7a3,
+    roughness: 0.8
+  });
+
+  const hair = new THREE.MeshStandardMaterial({
+    color: 0x3b2418,
+    roughness: 0.8
+  });
+
+  let clothesColor = 0x2563eb;
+
+  if (costume === "school") {
+    clothesColor = 0x1e3a8a;
+  }
+
+  if (costume === "police") {
+    clothesColor = 0x172554;
+  }
+
+  if (costume === "doctor") {
+    clothesColor = 0xf8fafc;
+  }
+
+  if (costume === "traditional") {
+    clothesColor = 0x9333ea;
+  }
+
+  if (costume === "sports") {
+    clothesColor = 0xdc2626;
+  }
+
+  const clothes =
+    new THREE.MeshStandardMaterial({
+      color: clothesColor,
+      roughness: 0.7
+    });
+
+  const black =
+    new THREE.MeshStandardMaterial({
+      color: 0x111111
+    });
+
+  // ----------------------------------------
+  // BODY
+  // ----------------------------------------
+
+  const body =
+    new THREE.Mesh(
+      new THREE.CapsuleGeometry(
+        0.55,
+        0.9,
+        8,
+        16
+      ),
+      clothes
+    );
+
+  body.position.y = 1.35;
+
+  group.add(body);
+
+  // ----------------------------------------
+  // HEAD
+  // ----------------------------------------
+
+  const head =
+    new THREE.Mesh(
+      new THREE.SphereGeometry(
+        0.62,
+        24,
+        20
+      ),
+      skin
+    );
+
+  head.position.y = 2.35;
+
+  group.add(head);
+
+  // ----------------------------------------
+  // HAIR
+  // ----------------------------------------
+
+  const hairTop =
+    new THREE.Mesh(
+      new THREE.SphereGeometry(
+        0.64,
+        24,
+        16
+      ),
+      hair
+    );
+
+  hairTop.scale.set(
+    1,
+    0.55,
+    1
+  );
+
+  hairTop.position.y = 2.72;
+
+  group.add(hairTop);
+
+  // ----------------------------------------
+  // EYES
+  // ----------------------------------------
+
+  [-0.22, 0.22].forEach(x => {
+
+    const eye =
+      new THREE.Mesh(
+        new THREE.SphereGeometry(
+          0.12,
+          16,
+          12
+        ),
+        new THREE.MeshStandardMaterial({
+          color: 0xffffff
+        })
+      );
+
+    eye.position.set(
+      x,
+      2.4,
+      0.55
+    );
+
+    group.add(eye);
+
+    const pupil =
+      new THREE.Mesh(
+        new THREE.SphereGeometry(
+          0.055,
+          12,
+          8
+        ),
+        black
+      );
+
+    pupil.position.set(
+      x,
+      2.4,
+      0.65
+    );
+
+    group.add(pupil);
+
+  });
+
+  // ----------------------------------------
+  // NOSE
+  // ----------------------------------------
+
+  const nose =
+    new THREE.Mesh(
+      new THREE.SphereGeometry(
+        0.08,
+        12,
+        8
+      ),
+      skin
+    );
+
+  nose.position.set(
+    0,
+    2.25,
+    0.61
+  );
+
+  group.add(nose);
+
+  // ----------------------------------------
+  // ARMS
+  // ----------------------------------------
+
+  [-1, 1].forEach(side => {
+
+    const arm =
+      new THREE.Mesh(
+        new THREE.CapsuleGeometry(
+          0.13,
+          0.65,
+          6,
+          10
+        ),
+        clothes
+      );
+
+    arm.position.set(
+      side * 0.68,
+      1.42,
+      0
+    );
+
+    arm.rotation.z =
+      side * 0.18;
+
+    group.add(arm);
+
+  });
+
+  // ----------------------------------------
+  // LEGS
+  // ----------------------------------------
+
+  [-1, 1].forEach(side => {
+
+    const leg =
+      new THREE.Mesh(
+        new THREE.CapsuleGeometry(
+          0.15,
+          0.65,
+          6,
+          10
+        ),
+        black
+      );
+
+    leg.position.set(
+      side * 0.2,
+      0.48,
+      0
+    );
+
+    group.add(leg);
+
+  });
+
+  // ----------------------------------------
+  // SHOES
+  // ----------------------------------------
+
+  [-1, 1].forEach(side => {
+
+    const shoe =
+      new THREE.Mesh(
+        new THREE.SphereGeometry(
+          0.22,
+          16,
+          10
+        ),
+        black
+      );
+
+    shoe.scale.set(
+      1.25,
+      0.55,
+      1.5
+    );
+
+    shoe.position.set(
+      side * 0.2,
+      0.12,
+      0.12
+    );
+
+    group.add(shoe);
+
+  });
+
+  // ----------------------------------------
+  // POLICE CAP
+  // ----------------------------------------
+
+  if (costume === "police") {
+
+    const cap =
+      new THREE.Mesh(
+        new THREE.CylinderGeometry(
+          0.5,
+          0.55,
+          0.16,
+          20
+        ),
+        clothes
+      );
+
+    cap.position.y = 2.92;
+
+    group.add(cap);
+
+  }
+
+  // ----------------------------------------
+  // DOCTOR COAT
+  // ----------------------------------------
+
+  if (costume === "doctor") {
+
+    const coat =
+      new THREE.Mesh(
+        new THREE.BoxGeometry(
+          0.72,
+          0.9,
+          0.12
+        ),
+        clothes
+      );
+
+    coat.position.set(
+      0,
+      1.4,
+      0.5
+    );
+
+    group.add(coat);
+
+  }
+
+  return group;
+}
 // ========================================
 // BACKGROUND
 // REAL IMAGE + COLOR FALLBACK
