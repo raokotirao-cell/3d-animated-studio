@@ -1922,103 +1922,81 @@ cartoonHuman(
   // ======================================
   // FARMER COSTUME
   // ======================================
+if (costume === "farmer") {
 
-  if (costume === "farmer") {
+  const group = new THREE.Group();
 
-    body.material.color.set(
-      0x4f8a3c
-    );
+  group.name = name || "Farmer";
 
-    const waistCloth =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.88,
-          0.34,
-          0.58
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xf5f0d0,
-          roughness: 0.82
-        })
+  this.gltfLoader.load(
+    "./assets/characters/farmer/model.glb",
+
+    (gltf) => {
+
+      const model = gltf.scene;
+
+      model.scale.set(
+        1,
+        1,
+        1
       );
 
-    waistCloth.position.set(
-      0,
-      1.03,
-      0
-    );
-
-    group.add(waistCloth);
-
-    const scarf =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.12,
-          0.64,
-          0.06
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xdc2626,
-          roughness: 0.65
-        })
+      model.position.set(
+        0,
+        0,
+        0
       );
 
-    scarf.position.set(
-      0.34,
-      1.77,
-      0.44
-    );
+      // Make sure the model is visible
+      model.traverse((child) => {
 
-    scarf.rotation.z =
-      -0.08;
+        if (child.isMesh) {
 
-    group.add(scarf);
+          child.castShadow = true;
+          child.receiveShadow = true;
 
-    const hat =
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          0.44,
-          0.52,
-          0.14,
-          28
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xd6b36a,
-          roughness: 0.88
-        })
+        }
+
+      });
+
+      group.add(model);
+
+      console.log(
+        "✅ Farmer GLB loaded:",
+        model
       );
 
-    hat.position.set(
-      0,
-      2.93,
-      0
-    );
+    },
 
-    group.add(hat);
+    (progress) => {
 
-    const hatTop =
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          0.28,
-          0.34,
-          0.20,
-          24
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xd6b36a,
-          roughness: 0.88
-        })
+      if (progress.total) {
+
+        console.log(
+          "Farmer loading:",
+          Math.round(
+            progress.loaded /
+            progress.total *
+            100
+          ) + "%"
+        );
+
+      }
+
+    },
+
+    (error) => {
+
+      console.error(
+        "❌ Farmer model failed to load:",
+        error
       );
 
-    hatTop.position.set(
-      0,
-      3.08,
-      0
-    );
+    }
+  );
 
-    group.add(hatTop);
-
-  }
+  return group;
+}
 
   // ======================================
   // EXPLORER COSTUME
