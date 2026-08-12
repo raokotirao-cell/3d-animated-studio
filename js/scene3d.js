@@ -497,6 +497,29 @@ this.backgroundTextures = {};
           ),
           material
         );
+      // ====================================
+// CHARACTER BODY VARIATION
+// ====================================
+
+if (type === "female") {
+
+  body.scale.set(
+    0.9,
+    1.05,
+    0.9
+  );
+
+}
+
+else if (type === "child") {
+
+  body.scale.set(
+    0.72,
+    0.72,
+    0.72
+  );
+
+}
 
       body.position.y =
         1.35;
@@ -513,6 +536,29 @@ this.backgroundTextures = {};
           ),
           material
         );
+      // ====================================
+// HEAD VARIATION
+// ====================================
+
+if (type === "female") {
+
+  head.scale.set(
+    0.95,
+    1.02,
+    0.95
+  );
+
+}
+
+else if (type === "child") {
+
+  head.scale.set(
+    1.15,
+    1.15,
+    1.15
+  );
+
+}
 
       head.position.y =
         2.35;
