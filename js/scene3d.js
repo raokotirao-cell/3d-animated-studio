@@ -880,9 +880,8 @@ return group;
 
 // ========================================
 // 3D CARTOON HUMAN
-// FINAL POLISHED CHARACTER
+// POLISHED CHARACTER BASE
 // ========================================
-
 cartoonHuman(
   name,
   costume = "casual",
@@ -891,30 +890,34 @@ cartoonHuman(
 
   const group = new THREE.Group();
 
-  group.name = name || "Cartoon Human";
+  group.name =
+    name || "Cartoon Human";
+
 
   // ======================================
-  // CHARACTER PROPORTIONS
+  // CHARACTER SCALE
   // ======================================
 
   if (type === "female") {
 
     group.scale.set(
-      0.94,
+      0.96,
       1.02,
-      0.94
+      0.96
     );
 
   }
+
   else if (type === "child") {
 
     group.scale.set(
-      0.80,
+      0.78,
       0.82,
-      0.80
+      0.78
     );
 
   }
+
 
   // ======================================
   // MATERIALS
@@ -923,45 +926,81 @@ cartoonHuman(
   const skinMaterial =
     new THREE.MeshStandardMaterial({
       color: 0xffc7a3,
-      roughness: 0.62,
+      roughness: 0.48,
       metalness: 0
     });
 
+
   const skinDarkMaterial =
     new THREE.MeshStandardMaterial({
-      color: 0xe9a47f,
-      roughness: 0.68
+      color: 0xe5a07c,
+      roughness: 0.55
     });
+
+
+  const skinHighlightMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0xffd8bd,
+      roughness: 0.42
+    });
+
 
   const hairMaterial =
     new THREE.MeshStandardMaterial({
-      color: 0x3a2418,
-      roughness: 0.72
+      color: 0x24160f,
+      roughness: 0.60,
+      metalness: 0
     });
+
+
+  const hairHighlightMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0x3b2418,
+      roughness: 0.52
+    });
+
 
   const eyeWhiteMaterial =
     new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      roughness: 0.28
+      roughness: 0.22
     });
+
 
   const irisMaterial =
     new THREE.MeshStandardMaterial({
       color: 0x4a2c20,
-      roughness: 0.25
+      roughness: 0.20
     });
+
 
   const blackMaterial =
     new THREE.MeshStandardMaterial({
-      color: 0x171717,
-      roughness: 0.5
+      color: 0x151515,
+      roughness: 0.42
     });
+
 
   const mouthMaterial =
     new THREE.MeshStandardMaterial({
-      color: 0x8b1e2d,
-      roughness: 0.5
+      color: 0x5f101d,
+      roughness: 0.42
     });
+
+
+  const lipMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0xb8324b,
+      roughness: 0.45
+    });
+
+
+  const teethMaterial =
+    new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      roughness: 0.30
+    });
+
 
   // ======================================
   // CLOTHING COLOR
@@ -970,143 +1009,258 @@ cartoonHuman(
   let clothesColor = 0x2563eb;
 
   if (costume === "school") {
+
     clothesColor = 0x1e3a8a;
+
   }
+
   else if (costume === "police") {
+
     clothesColor = 0x172554;
+
   }
+
   else if (costume === "doctor") {
+
     clothesColor = 0xf8fafc;
+
   }
+
   else if (costume === "traditional") {
+
     clothesColor = 0x9333ea;
+
   }
+
   else if (costume === "sports") {
+
     clothesColor = 0xdc2626;
+
   }
+
   else if (costume === "farmer") {
+
     clothesColor = 0x4f8a3c;
+
   }
+
   else if (costume === "explorer") {
+
     clothesColor = 0x8b5e34;
+
   }
+
   else if (costume === "superhero") {
+
     clothesColor = 0x2563eb;
+
   }
+
 
   const clothesMaterial =
     new THREE.MeshStandardMaterial({
       color: clothesColor,
-      roughness: 0.72
+      roughness: 0.62
     });
 
+
   // ======================================
-  // BODY
+  // HELPER
   // ======================================
 
-  const body =
-    new THREE.Mesh(
+  const addMesh =
+    (geometry, material, position, scale = null) => {
+
+      const mesh =
+        new THREE.Mesh(
+          geometry,
+          material
+        );
+
+      mesh.position.set(
+        position[0],
+        position[1],
+        position[2]
+      );
+
+      if (scale) {
+
+        mesh.scale.set(
+          scale[0],
+          scale[1],
+          scale[2]
+        );
+
+      }
+
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+
+      group.add(mesh);
+
+      return mesh;
+
+    };
+
+
+  // ======================================
+  // TORSO
+  // ======================================
+
+  const torso =
+    addMesh(
+
       new THREE.CapsuleGeometry(
-        0.52,
+        0.50,
         0.82,
-        12,
-        24
+        16,
+        32
       ),
-      clothesMaterial
+
+      clothesMaterial,
+
+      [0, 1.34, 0],
+
+      [1.10, 1.02, 0.78]
+
     );
 
-  body.scale.set(
-    1.06,
-    1.0,
-    0.74
-  );
-
-  body.position.set(
-    0,
-    1.35,
-    0
-  );
-
-  group.add(body);
 
   // ======================================
-  // SHOULDERS
+  // CHEST / SHOULDER VOLUME
   // ======================================
 
-  const shoulders =
-    new THREE.Mesh(
-      new THREE.SphereGeometry(
-        0.55,
-        24,
-        16
-      ),
-      clothesMaterial
-    );
+  addMesh(
 
-  shoulders.scale.set(
-    1.28,
-    0.42,
-    0.68
+    new THREE.SphereGeometry(
+      0.52,
+      32,
+      20
+    ),
+
+    clothesMaterial,
+
+    [0, 1.62, 0],
+
+    [1.28, 0.46, 0.76]
+
   );
 
-  shoulders.position.set(
-    0,
-    1.62,
-    0
-  );
-
-  group.add(shoulders);
 
   // ======================================
   // NECK
   // ======================================
 
-  const neck =
-    new THREE.Mesh(
-      new THREE.CylinderGeometry(
-        0.19,
-        0.22,
-        0.30,
-        20
-      ),
-      skinMaterial
-    );
+  addMesh(
 
-  neck.position.set(
-    0,
-    1.88,
-    0
+    new THREE.CylinderGeometry(
+      0.18,
+      0.21,
+      0.30,
+      24
+    ),
+
+    skinMaterial,
+
+    [0, 1.88, 0]
+
   );
 
-  group.add(neck);
+
+  // ======================================
+  // NECK SHADOW / COLLAR
+  // ======================================
+
+  addMesh(
+
+    new THREE.TorusGeometry(
+      0.205,
+      0.035,
+      10,
+      32
+    ),
+
+    clothesMaterial,
+
+    [0, 1.76, 0]
+
+  );
+
 
   // ======================================
   // HEAD
   // ======================================
 
-  const head =
-    new THREE.Mesh(
+  addMesh(
+
+    new THREE.SphereGeometry(
+      0.67,
+      48,
+      36
+    ),
+
+    skinMaterial,
+
+    [0, 2.39, 0],
+
+    [0.98, 1.06, 0.94]
+
+  );
+
+
+  // ======================================
+  // JAW / CHIN
+  // ======================================
+
+  addMesh(
+
+    new THREE.SphereGeometry(
+      0.43,
+      32,
+      24
+    ),
+
+    skinMaterial,
+
+    [0, 2.12, 0.33],
+
+    [1.05, 0.62, 0.72]
+
+  );
+
+
+  // ======================================
+  // CHEEKS
+  // ======================================
+
+  [-1, 1].forEach(side => {
+
+    addMesh(
+
       new THREE.SphereGeometry(
-        0.65,
-        40,
-        28
+        0.18,
+        24,
+        18
       ),
-      skinMaterial
+
+      skinHighlightMaterial,
+
+      [
+        side * 0.36,
+        2.22,
+        0.55
+      ],
+
+      [
+        1.15,
+        0.82,
+        0.55
+      ]
+
     );
 
-  head.scale.set(
-    0.96,
-    1.04,
-    0.94
-  );
+  });
 
-  head.position.set(
-    0,
-    2.38,
-    0
-  );
-
-  group.add(head);
 
   // ======================================
   // EARS
@@ -1114,91 +1268,80 @@ cartoonHuman(
 
   [-1, 1].forEach(side => {
 
-    const ear =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.14,
-          20,
-          14
-        ),
-        skinMaterial
-      );
+    addMesh(
 
-    ear.scale.set(
-      0.62,
-      1.0,
-      0.78
-    );
-
-    ear.position.set(
-      side * 0.61,
-      2.38,
-      0
-    );
-
-    group.add(ear);
-
-  });
-
-  // ======================================
-  // INNER EARS
-  // ======================================
-
-  [-1, 1].forEach(side => {
-
-    const innerEar =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.065,
-          14,
-          10
-        ),
-        skinDarkMaterial
-      );
-
-    innerEar.scale.set(
-      0.65,
-      1.0,
-      0.5
-    );
-
-    innerEar.position.set(
-      side * 0.625,
-      2.38,
-      0.075
-    );
-
-    group.add(innerEar);
-
-  });
-
-  // ======================================
-  // HAIR CAP
-  // ======================================
-
-  const hair =
-    new THREE.Mesh(
       new THREE.SphereGeometry(
-        0.67,
-        40,
-        24
+        0.155,
+        28,
+        20
       ),
-      hairMaterial
+
+      skinMaterial,
+
+      [
+        side * 0.62,
+        2.39,
+        0
+      ],
+
+      [
+        0.62,
+        1.08,
+        0.78
+      ]
+
     );
 
-  hair.scale.set(
-    1.03,
-    0.66,
-    0.98
+
+    // Inner ear
+
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.082,
+        20,
+        16
+      ),
+
+      skinDarkMaterial,
+
+      [
+        side * 0.635,
+        2.39,
+        0.075
+      ],
+
+      [
+        0.62,
+        1.10,
+        0.42
+      ]
+
+    );
+
+  });
+
+
+  // ======================================
+  // HAIR BACK / CAP
+  // ======================================
+
+  addMesh(
+
+    new THREE.SphereGeometry(
+      0.69,
+      48,
+      32
+    ),
+
+    hairMaterial,
+
+    [0, 2.69, -0.02],
+
+    [1.04, 0.68, 0.99]
+
   );
 
-  hair.position.set(
-    0,
-    2.73,
-    -0.02
-  );
-
-  group.add(hair);
 
   // ======================================
   // HAIR SIDES
@@ -1206,59 +1349,76 @@ cartoonHuman(
 
   [-1, 1].forEach(side => {
 
-    const sideHair =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.22,
-          20,
-          14
-        ),
-        hairMaterial
-      );
+    addMesh(
 
-    sideHair.scale.set(
-      0.72,
-      1.25,
-      0.72
+      new THREE.SphereGeometry(
+        0.23,
+        28,
+        20
+      ),
+
+      hairMaterial,
+
+      [
+        side * 0.48,
+        2.57,
+        0.10
+      ],
+
+      [
+        0.76,
+        1.35,
+        0.75
+      ]
+
     );
-
-    sideHair.position.set(
-      side * 0.49,
-      2.61,
-      0.05
-    );
-
-    group.add(sideHair);
 
   });
 
+
   // ======================================
-  // FRONT HAIR
+  // HAIR CURLS / FRONT CLUMPS
   // ======================================
 
-  const fringe =
-    new THREE.Mesh(
+  const hairClumps = [
+
+    [-0.38, 2.68, 0.43, 0.42, 0.48, 0.70],
+    [-0.19, 2.73, 0.48, 0.42, 0.42, 0.72],
+    [ 0.00, 2.75, 0.49, 0.44, 0.40, 0.72],
+    [ 0.20, 2.73, 0.47, 0.42, 0.43, 0.72],
+    [ 0.39, 2.68, 0.43, 0.42, 0.48, 0.70]
+
+  ];
+
+
+  hairClumps.forEach(h => {
+
+    addMesh(
+
       new THREE.SphereGeometry(
-        0.30,
+        0.27,
         24,
-        16
+        18
       ),
-      hairMaterial
+
+      hairHighlightMaterial,
+
+      [
+        h[0],
+        h[1],
+        h[2]
+      ],
+
+      [
+        h[3],
+        h[4],
+        h[5]
+      ]
+
     );
 
-  fringe.scale.set(
-    1.75,
-    0.55,
-    0.70
-  );
+  });
 
-  fringe.position.set(
-    0,
-    2.64,
-    0.48
-  );
-
-  group.add(fringe);
 
   // ======================================
   // EYEBROWS
@@ -1266,257 +1426,352 @@ cartoonHuman(
 
   [-1, 1].forEach(side => {
 
-    const eyebrow =
-      new THREE.Mesh(
+    const brow =
+      addMesh(
+
         new THREE.CapsuleGeometry(
-          0.035,
-          0.18,
-          4,
-          8
+          0.045,
+          0.20,
+          8,
+          12
         ),
-        hairMaterial
+
+        hairMaterial,
+
+        [
+          side * 0.22,
+          2.56,
+          0.61
+        ]
+
       );
 
-    eyebrow.position.set(
-      side * 0.22,
-      2.55,
-      0.605
+
+    brow.rotation.z =
+      side < 0
+        ? 0.10
+        : -0.10;
+
+
+    brow.scale.set(
+      1.0,
+      1.0,
+      0.72
     );
-
-    eyebrow.rotation.z =
-      side < 0 ? 0.10 : -0.10;
-
-    group.add(eyebrow);
 
   });
 
-    // ======================================
+
+  // ======================================
   // EYES
-  // POLISHED CARTOON EYES
   // ======================================
 
   [-1, 1].forEach(side => {
 
     // Eye white
-    const eyeWhite =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.17,
-          32,
-          24
-        ),
-        eyeWhiteMaterial
-      );
 
-    eyeWhite.scale.set(
-      1.05,
-      1.18,
-      0.82
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.17,
+        32,
+        24
+      ),
+
+      eyeWhiteMaterial,
+
+      [
+        side * 0.22,
+        2.40,
+        0.595
+      ],
+
+      [
+        1.05,
+        1.18,
+        0.82
+      ]
+
     );
-
-    eyeWhite.position.set(
-      side * 0.22,
-      2.40,
-      0.595
-    );
-
-    group.add(eyeWhite);
 
 
     // Iris
-    const iris =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.092,
-          24,
-          20
-        ),
-        irisMaterial
-      );
 
-    iris.scale.set(
-      1.0,
-      1.08,
-      0.65
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.092,
+        28,
+        22
+      ),
+
+      irisMaterial,
+
+      [
+        side * 0.22,
+        2.40,
+        0.715
+      ],
+
+      [
+        1.0,
+        1.08,
+        0.62
+      ]
+
     );
-
-    iris.position.set(
-      side * 0.22,
-      2.40,
-      0.715
-    );
-
-    group.add(iris);
 
 
     // Pupil
-    const pupil =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.047,
-          20,
-          16
-        ),
-        blackMaterial
-      );
 
-    pupil.position.set(
-      side * 0.22,
-      2.40,
-      0.765
-    );
+    addMesh(
 
-    group.add(pupil);
-
-
-    // Main eye highlight
-    const highlight =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.026,
-          12,
-          12
-        ),
-        eyeWhiteMaterial
-      );
-
-    highlight.position.set(
-      side * 0.195,
-      2.445,
-      0.795
-    );
-
-    group.add(highlight);
-
-
-    // Small secondary highlight
-    const smallHighlight =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.012,
-          10,
-          10
-        ),
-        eyeWhiteMaterial
-      );
-
-    smallHighlight.position.set(
-      side * 0.245,
-      2.375,
-      0.792
-    );
-
-    group.add(smallHighlight);
-
-  });
-
-  // ======================================
-  // NOSE
-
-  // ======================================
-  // NOSE
-  // ======================================
-
-  const nose =
-    new THREE.Mesh(
       new THREE.SphereGeometry(
-        0.095,
+        0.047,
         20,
         16
       ),
-      skinMaterial
+
+      blackMaterial,
+
+      [
+        side * 0.22,
+        2.40,
+        0.765
+      ]
+
     );
 
-  nose.scale.set(
-    0.86,
-    1.15,
-    0.82
+
+    // Main highlight
+
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.027,
+        14,
+        12
+      ),
+
+      eyeWhiteMaterial,
+
+      [
+        side * 0.195,
+        2.445,
+        0.798
+      ]
+
+    );
+
+
+    // Small highlight
+
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.012,
+        10,
+        10
+      ),
+
+      eyeWhiteMaterial,
+
+      [
+        side * 0.245,
+        2.375,
+        0.795
+      ]
+
+    );
+
+
+    // Upper eyelid
+
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.17,
+        24,
+        16
+      ),
+
+      skinMaterial,
+
+      [
+        side * 0.22,
+        2.49,
+        0.61
+      ],
+
+      [
+        1.0,
+        0.28,
+        0.40
+      ]
+
+    );
+
+  });
+
+
+  // ======================================
+  // NOSE BRIDGE
+  // ======================================
+
+  addMesh(
+
+    new THREE.SphereGeometry(
+      0.085,
+      24,
+      18
+    ),
+
+    skinMaterial,
+
+    [0, 2.285, 0.64],
+
+    [0.72, 1.45, 0.72]
+
   );
 
-  nose.position.set(
-    0,
-    2.245,
-    0.665
-  );
-
-  group.add(nose);
 
   // ======================================
   // NOSE TIP
   // ======================================
 
-  const noseTip =
-    new THREE.Mesh(
+  addMesh(
+
+    new THREE.SphereGeometry(
+      0.075,
+      24,
+      18
+    ),
+
+    skinHighlightMaterial,
+
+    [0, 2.205, 0.705],
+
+    [1.10, 0.82, 1.0]
+
+  );
+
+
+  // ======================================
+  // NOSE WINGS
+  // ======================================
+
+  [-1, 1].forEach(side => {
+
+    addMesh(
+
       new THREE.SphereGeometry(
-        0.055,
+        0.042,
         16,
         12
       ),
-      skinMaterial
+
+      skinDarkMaterial,
+
+      [
+        side * 0.055,
+        2.195,
+        0.69
+      ],
+
+      [
+        1.25,
+        0.72,
+        0.75
+      ]
+
     );
 
-  noseTip.position.set(
-    0,
-    2.205,
-    0.705
-  );
+  });
 
-  group.add(noseTip);
 
   // ======================================
-  // MOUTH
+  // MOUTH OPENING
   // ======================================
 
-  const mouth =
-    new THREE.Mesh(
-      new THREE.TorusGeometry(
-        0.135,
-        0.028,
-        12,
-        28,
-        Math.PI
-      ),
-      mouthMaterial
-    );
+  addMesh(
 
-  mouth.rotation.x =
-    Math.PI;
+    new THREE.SphereGeometry(
+      0.13,
+      28,
+      20
+    ),
 
-  mouth.position.set(
-    0,
-    2.07,
-    0.655
+    mouthMaterial,
+
+    [0, 2.075, 0.67],
+
+    [1.18, 0.56, 0.46]
+
   );
 
-  group.add(mouth);
+
+  // ======================================
+  // UPPER LIP
+  // ======================================
+
+  addMesh(
+
+    new THREE.TorusGeometry(
+      0.105,
+      0.025,
+      10,
+      24,
+      Math.PI
+    ),
+
+    lipMaterial,
+
+    [0, 2.095, 0.705]
+
+  );
+
 
   // ======================================
   // LOWER LIP
   // ======================================
 
-  const lowerLip =
-    new THREE.Mesh(
-      new THREE.SphereGeometry(
-        0.055,
-        16,
-        10
-      ),
-      mouthMaterial
-    );
+  addMesh(
 
-  lowerLip.scale.set(
-    1.5,
-    0.42,
-    0.50
+    new THREE.SphereGeometry(
+      0.065,
+      20,
+      14
+    ),
+
+    lipMaterial,
+
+    [0, 2.035, 0.70],
+
+    [1.45, 0.45, 0.60]
+
   );
 
-  lowerLip.position.set(
-    0,
-    2.035,
-    0.665
+
+  // ======================================
+  // TEETH
+  // ======================================
+
+  addMesh(
+
+    new THREE.SphereGeometry(
+      0.075,
+      20,
+      12
+    ),
+
+    teethMaterial,
+
+    [0, 2.082, 0.705],
+
+    [1.10, 0.28, 0.42]
+
   );
 
-  group.add(lowerLip);
 
   // ======================================
   // ARMS
@@ -1525,28 +1780,31 @@ cartoonHuman(
   [-1, 1].forEach(side => {
 
     const arm =
-      new THREE.Mesh(
+      addMesh(
+
         new THREE.CapsuleGeometry(
-          0.135,
+          0.145,
           0.66,
-          8,
-          14
+          10,
+          18
         ),
-        clothesMaterial
+
+        clothesMaterial,
+
+        [
+          side * 0.70,
+          1.38,
+          0
+        ]
+
       );
 
-    arm.position.set(
-      side * 0.69,
-      1.39,
-      0
-    );
 
     arm.rotation.z =
       side * 0.12;
 
-    group.add(arm);
-
   });
+
 
   // ======================================
   // HANDS
@@ -1554,50 +1812,95 @@ cartoonHuman(
 
   [-1, 1].forEach(side => {
 
-    const hand =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.165,
-          20,
-          16
-        ),
-        skinMaterial
-      );
+    addMesh(
 
-    hand.scale.set(
-      0.92,
-      1.08,
-      0.92
+      new THREE.SphereGeometry(
+        0.17,
+        24,
+        18
+      ),
+
+      skinMaterial,
+
+      [
+        side * 0.79,
+        0.98,
+        0
+      ],
+
+      [
+        0.95,
+        1.08,
+        0.82
+      ]
+
     );
 
-    hand.position.set(
-      side * 0.78,
-      0.99,
-      0
-    );
-
-    group.add(hand);
 
     // Thumb
-    const thumb =
-      new THREE.Mesh(
+
+    addMesh(
+
+      new THREE.SphereGeometry(
+        0.065,
+        16,
+        12
+      ),
+
+      skinMaterial,
+
+      [
+        side * 0.86,
+        1.01,
+        0.09
+      ],
+
+      [
+        0.80,
+        1.20,
+        0.75
+      ]
+
+    );
+
+
+    // Fingers
+
+    for (
+      let finger = 0;
+      finger < 4;
+      finger++
+    ) {
+
+      addMesh(
+
         new THREE.SphereGeometry(
-          0.055,
+          0.035,
           12,
           10
         ),
-        skinMaterial
+
+        skinMaterial,
+
+        [
+          side *
+            (
+              0.735 +
+              finger * 0.035
+            ),
+          0.92 -
+            Math.abs(
+              finger - 1.5
+            ) * 0.012,
+          0.10
+        ]
+
       );
 
-    thumb.position.set(
-      side * 0.86,
-      1.02,
-      0.08
-    );
-
-    group.add(thumb);
+    }
 
   });
+
 
   // ======================================
   // LEGS
@@ -1605,26 +1908,27 @@ cartoonHuman(
 
   [-1, 1].forEach(side => {
 
-    const leg =
-      new THREE.Mesh(
-        new THREE.CapsuleGeometry(
-          0.155,
-          0.70,
-          8,
-          14
-        ),
-        blackMaterial
-      );
+    addMesh(
 
-    leg.position.set(
-      side * 0.20,
-      0.47,
-      0
+      new THREE.CapsuleGeometry(
+        0.17,
+        0.70,
+        10,
+        18
+      ),
+
+      blackMaterial,
+
+      [
+        side * 0.21,
+        0.47,
+        0
+      ]
+
     );
 
-    group.add(leg);
-
   });
+
 
   // ======================================
   // SHOES
@@ -1632,50 +1936,53 @@ cartoonHuman(
 
   [-1, 1].forEach(side => {
 
-    const shoe =
-      new THREE.Mesh(
-        new THREE.SphereGeometry(
-          0.235,
-          24,
-          16
-        ),
-        blackMaterial
-      );
+    addMesh(
 
-    shoe.scale.set(
-      1.35,
-      0.58,
-      1.65
+      new THREE.SphereGeometry(
+        0.24,
+        28,
+        18
+      ),
+
+      blackMaterial,
+
+      [
+        side * 0.21,
+        0.12,
+        0.14
+      ],
+
+      [
+        1.38,
+        0.60,
+        1.72
+      ]
+
     );
 
-    shoe.position.set(
-      side * 0.20,
-      0.12,
-      0.13
+
+    // Sole
+
+    addMesh(
+
+      new THREE.BoxGeometry(
+        0.34,
+        0.055,
+        0.46
+      ),
+
+      blackMaterial,
+
+      [
+        side * 0.21,
+        0.055,
+        0.16
+      ]
+
     );
-
-    group.add(shoe);
-
-    // Shoe sole
-    const sole =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.28,
-          0.045,
-          0.42
-        ),
-        blackMaterial
-      );
-
-    sole.position.set(
-      side * 0.20,
-      0.055,
-      0.15
-    );
-
-    group.add(sole);
 
   });
+
 
   // ======================================
   // SCHOOL COSTUME
@@ -1687,46 +1994,50 @@ cartoonHuman(
       new THREE.Mesh(
         new THREE.CapsuleGeometry(
           0.48,
-          0.76,
-          8,
-          16
+          0.78,
+          10,
+          20
         ),
         new THREE.MeshStandardMaterial({
           color: 0xf8fafc,
-          roughness: 0.72
+          roughness: 0.62
         })
       );
 
     shirt.position.set(
       0,
-      1.37,
-      0
+      1.36,
+      0.02
+    );
+
+    shirt.scale.set(
+      1.04,
+      1.0,
+      0.80
     );
 
     group.add(shirt);
 
-    const tie =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.105,
-          0.44,
-          0.045
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xdc2626,
-          roughness: 0.55
-        })
-      );
 
-    tie.position.set(
-      0,
-      1.57,
-      0.52
+    addMesh(
+
+      new THREE.BoxGeometry(
+        0.11,
+        0.46,
+        0.05
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xdc2626,
+        roughness: 0.50
+      }),
+
+      [0, 1.56, 0.51]
+
     );
 
-    group.add(tie);
-
   }
+
 
   // ======================================
   // POLICE COSTUME
@@ -1734,65 +2045,56 @@ cartoonHuman(
 
   if (costume === "police") {
 
-    const badge =
-      new THREE.Mesh(
-        new THREE.CircleGeometry(
-          0.095,
-          20
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xfacc15,
-          roughness: 0.35
-        })
-      );
+    addMesh(
 
-    badge.position.set(
-      0,
-      1.48,
-      0.54
+      new THREE.CircleGeometry(
+        0.095,
+        24
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xfacc15,
+        roughness: 0.30
+      }),
+
+      [0, 1.48, 0.54]
+
     );
 
-    group.add(badge);
 
-    const cap =
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          0.46,
-          0.54,
-          0.14,
-          28
-        ),
-        clothesMaterial
-      );
+    addMesh(
 
-    cap.position.set(
-      0,
-      2.92,
-      0
+      new THREE.CylinderGeometry(
+        0.48,
+        0.56,
+        0.14,
+        32
+      ),
+
+      clothesMaterial,
+
+      [0, 2.92, 0]
+
     );
 
-    group.add(cap);
 
-    const capTop =
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          0.29,
-          0.34,
-          0.18,
-          24
-        ),
-        clothesMaterial
-      );
+    addMesh(
 
-    capTop.position.set(
-      0,
-      3.06,
-      0
+      new THREE.CylinderGeometry(
+        0.29,
+        0.34,
+        0.18,
+        28
+      ),
+
+      clothesMaterial,
+
+      [0, 3.06, 0]
+
     );
-
-    group.add(capTop);
 
   }
+
 
   // ======================================
   // DOCTOR COSTUME
@@ -1800,51 +2102,46 @@ cartoonHuman(
 
   if (costume === "doctor") {
 
-    const coat =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.84,
-          0.96,
-          0.12
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          roughness: 0.68
-        })
-      );
+    addMesh(
 
-    coat.position.set(
-      0,
-      1.39,
-      0.50
+      new THREE.BoxGeometry(
+        0.84,
+        0.96,
+        0.12
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.60
+      }),
+
+      [0, 1.39, 0.50]
+
     );
 
-    group.add(coat);
 
     const stethoscope =
-      new THREE.Mesh(
+      addMesh(
+
         new THREE.TorusGeometry(
           0.15,
           0.018,
           8,
-          20,
+          24,
           Math.PI
         ),
-        blackMaterial
+
+        blackMaterial,
+
+        [0, 1.65, 0.57]
+
       );
 
     stethoscope.rotation.x =
       Math.PI / 2;
 
-    stethoscope.position.set(
-      0,
-      1.65,
-      0.57
-    );
-
-    group.add(stethoscope);
-
   }
+
 
   // ======================================
   // TRADITIONAL COSTUME
@@ -1852,56 +2149,52 @@ cartoonHuman(
 
   if (costume === "traditional") {
 
-    body.material.color.set(
+    torso.material.color.set(
       0x9333ea
     );
 
-    const belt =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          1.02,
-          0.12,
-          0.65
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xfacc15,
-          roughness: 0.48
-        })
-      );
 
-    belt.position.set(
-      0,
-      1.08,
-      0
+    addMesh(
+
+      new THREE.BoxGeometry(
+        1.02,
+        0.12,
+        0.65
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xfacc15,
+        roughness: 0.45
+      }),
+
+      [0, 1.08, 0]
+
     );
 
-    group.add(belt);
 
     const sash =
-      new THREE.Mesh(
+      addMesh(
+
         new THREE.BoxGeometry(
           0.12,
           0.72,
           0.06
         ),
+
         new THREE.MeshStandardMaterial({
           color: 0xfacc15,
-          roughness: 0.5
-        })
-      );
+          roughness: 0.45
+        }),
 
-    sash.position.set(
-      0.30,
-      1.45,
-      0.48
-    );
+        [0.30, 1.45, 0.48]
+
+      );
 
     sash.rotation.z =
       -0.15;
 
-    group.add(sash);
-
   }
+
 
   // ======================================
   // SPORTS COSTUME
@@ -1909,285 +2202,164 @@ cartoonHuman(
 
   if (costume === "sports") {
 
-    const stripe =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.72,
-          0.08,
-          0.035
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          roughness: 0.45
-        })
-      );
+    addMesh(
 
-    stripe.position.set(
-      0,
-      1.52,
-      0.53
+      new THREE.BoxGeometry(
+        0.72,
+        0.08,
+        0.035
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        roughness: 0.40
+      }),
+
+      [0, 1.52, 0.53]
+
     );
-
-    group.add(stripe);
-
-    const number =
-      new THREE.Mesh(
-        new THREE.PlaneGeometry(
-          0.24,
-          0.30
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xffffff,
-          roughness: 0.45
-        })
-      );
-
-    number.position.set(
-      0,
-      1.37,
-      0.54
-    );
-
-    group.add(number);
 
   }
 
-  // ======================================
-  // FARMER COSTUME
-  // ======================================
-if (costume === "farmer") {
-
-  const group = new THREE.Group();
-
-  group.name = name || "Farmer";
-
-  this.gltfLoader.load(
-    "./assets/characters/farmer/model.glb",
-
-    (gltf) => {
-
-      const model = gltf.scene;
-
-      model.scale.set(
-        1,
-        1,
-        1
-      );
-
-      model.position.set(
-        0,
-        0,
-        0
-      );
-
-      // Make sure the model is visible
-      model.traverse((child) => {
-
-        if (child.isMesh) {
-
-          child.castShadow = true;
-          child.receiveShadow = true;
-
-        }
-
-      });
-
-      group.add(model);
-
-      console.log(
-        "✅ Farmer GLB loaded:",
-        model
-      );
-
-    },
-
-    (progress) => {
-
-      if (progress.total) {
-
-        console.log(
-          "Farmer loading:",
-          Math.round(
-            progress.loaded /
-            progress.total *
-            100
-          ) + "%"
-        );
-
-      }
-
-    },
-
-    (error) => {
-
-      console.error(
-        "❌ Farmer model failed to load:",
-        error
-      );
-
-    }
-  );
-
-  return group;
-}
 
   // ======================================
-  // EXPLORER COSTUME
+  // EXPLORER
   // ======================================
 
   if (costume === "explorer") {
 
-    body.material.color.set(
+    torso.material.color.set(
       0x8b5e34
     );
 
-    const belt =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.94,
-          0.11,
-          0.60
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0x3f2a18,
-          roughness: 0.82
-        })
-      );
 
-    belt.position.set(
-      0,
-      1.08,
-      0
+    addMesh(
+
+      new THREE.BoxGeometry(
+        0.94,
+        0.11,
+        0.60
+      ),
+
+      blackMaterial,
+
+      [0, 1.08, 0]
+
     );
 
-    group.add(belt);
 
-    const backpack =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.48,
-          0.65,
-          0.20
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0x166534,
-          roughness: 0.82
-        })
-      );
+    addMesh(
 
-    backpack.position.set(
-      0,
-      1.45,
-      -0.43
+      new THREE.BoxGeometry(
+        0.48,
+        0.65,
+        0.20
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0x166534,
+        roughness: 0.78
+      }),
+
+      [0, 1.45, -0.43]
+
     );
 
-    group.add(backpack);
 
-    const explorerHat =
-      new THREE.Mesh(
-        new THREE.CylinderGeometry(
-          0.42,
-          0.48,
-          0.14,
-          28
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xc08457,
-          roughness: 0.85
-        })
-      );
+    addMesh(
 
-    explorerHat.position.set(
-      0,
-      2.92,
-      0
+      new THREE.CylinderGeometry(
+        0.42,
+        0.48,
+        0.14,
+        32
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xc08457,
+        roughness: 0.78
+      }),
+
+      [0, 2.92, 0]
+
     );
-
-    group.add(explorerHat);
 
   }
 
+
   // ======================================
-  // SUPERHERO COSTUME
+  // SUPERHERO
   // ======================================
 
   if (costume === "superhero") {
 
-    body.material.color.set(
+    torso.material.color.set(
       0x2563eb
     );
 
-    const heroBelt =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.96,
-          0.12,
-          0.62
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xfacc15,
-          roughness: 0.45
-        })
-      );
 
-    heroBelt.position.set(
-      0,
-      1.10,
-      0
+    addMesh(
+
+      new THREE.BoxGeometry(
+        0.96,
+        0.12,
+        0.62
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xfacc15,
+        roughness: 0.40
+      }),
+
+      [0, 1.10, 0]
+
     );
 
-    group.add(heroBelt);
 
-    const emblem =
-      new THREE.Mesh(
-        new THREE.CircleGeometry(
-          0.13,
-          24
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xfacc15,
-          roughness: 0.40
-        })
-      );
+    addMesh(
 
-    emblem.position.set(
-      0,
-      1.50,
-      0.55
+      new THREE.CircleGeometry(
+        0.13,
+        24
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xfacc15,
+        roughness: 0.35
+      }),
+
+      [0, 1.50, 0.55]
+
     );
 
-    group.add(emblem);
 
-    const cape =
-      new THREE.Mesh(
-        new THREE.BoxGeometry(
-          0.76,
-          1.08,
-          0.055
-        ),
-        new THREE.MeshStandardMaterial({
-          color: 0xdc2626,
-          roughness: 0.65
-        })
-      );
+    addMesh(
 
-    cape.position.set(
-      0,
-      1.55,
-      -0.43
+      new THREE.BoxGeometry(
+        0.76,
+        1.08,
+        0.055
+      ),
+
+      new THREE.MeshStandardMaterial({
+        color: 0xdc2626,
+        roughness: 0.58
+      }),
+
+      [0, 1.55, -0.43]
+
     );
-
-    group.add(cape);
 
   }
 
+
   // ======================================
-  // FINAL CHARACTER
+  // FINAL
   // ======================================
 
   return group;
-}
 
+}
 // ========================================
 // BACKGROUND
 // REAL IMAGE + COLOR FALLBACK
