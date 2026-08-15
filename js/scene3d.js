@@ -1290,8 +1290,9 @@ cartoonHuman(
 
   });
 
-  // ======================================
+    // ======================================
   // EYES
+  // POLISHED CARTOON EYES
   // ======================================
 
   [-1, 1].forEach(side => {
@@ -1300,53 +1301,61 @@ cartoonHuman(
     const eyeWhite =
       new THREE.Mesh(
         new THREE.SphereGeometry(
-          0.145,
-          24,
-          18
+          0.17,
+          32,
+          24
         ),
         eyeWhiteMaterial
       );
 
     eyeWhite.scale.set(
-      0.95,
-      1.12,
+      1.05,
+      1.18,
       0.82
     );
 
     eyeWhite.position.set(
       side * 0.22,
       2.40,
-      0.585
+      0.595
     );
 
     group.add(eyeWhite);
+
 
     // Iris
     const iris =
       new THREE.Mesh(
         new THREE.SphereGeometry(
-          0.078,
-          20,
-          16
+          0.092,
+          24,
+          20
         ),
         irisMaterial
       );
 
+    iris.scale.set(
+      1.0,
+      1.08,
+      0.65
+    );
+
     iris.position.set(
       side * 0.22,
       2.40,
-      0.695
+      0.715
     );
 
     group.add(iris);
+
 
     // Pupil
     const pupil =
       new THREE.Mesh(
         new THREE.SphereGeometry(
-          0.040,
-          16,
-          12
+          0.047,
+          20,
+          16
         ),
         blackMaterial
       );
@@ -1354,31 +1363,55 @@ cartoonHuman(
     pupil.position.set(
       side * 0.22,
       2.40,
-      0.755
+      0.765
     );
 
     group.add(pupil);
 
-    // Highlight
+
+    // Main eye highlight
     const highlight =
       new THREE.Mesh(
         new THREE.SphereGeometry(
-          0.020,
-          10,
-          10
+          0.026,
+          12,
+          12
         ),
         eyeWhiteMaterial
       );
 
     highlight.position.set(
       side * 0.195,
-      2.435,
-      0.785
+      2.445,
+      0.795
     );
 
     group.add(highlight);
 
+
+    // Small secondary highlight
+    const smallHighlight =
+      new THREE.Mesh(
+        new THREE.SphereGeometry(
+          0.012,
+          10,
+          10
+        ),
+        eyeWhiteMaterial
+      );
+
+    smallHighlight.position.set(
+      side * 0.245,
+      2.375,
+      0.792
+    );
+
+    group.add(smallHighlight);
+
   });
+
+  // ======================================
+  // NOSE
 
   // ======================================
   // NOSE
