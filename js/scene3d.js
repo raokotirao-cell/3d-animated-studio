@@ -41,10 +41,16 @@ export class Studio3D {
       );
 
     this.camera.position.set(
-      7,
-      5,
-      9
-    );
+  0,
+  2.8,
+  7
+);
+
+this.camera.lookAt(
+  0,
+  1.5,
+  0
+);
 
 
     // -------------------------------
