@@ -39,19 +39,16 @@ export class Studio3D {
         0.1,
         100
       );
-
-    this.camera.position.set(
+this.camera.position.set(
   0,
   2.8,
-  7
+  5
 );
-
 this.camera.lookAt(
   0,
   1.5,
   0
 );
-
 
     // -------------------------------
     // Renderer
@@ -323,7 +320,7 @@ if (costume === "farmer") {
       box.getCenter(center);
 
       // Target character height
-      const targetHeight = 5.2;
+      const targetHeight = 4.2;
 
       if (size.y > 0) {
 
