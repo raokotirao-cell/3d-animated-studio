@@ -198,6 +198,18 @@ this.gltfLoader = new GLTFLoader();
     this.playing = false;
 
     this.sceneData = null;
+    this.zoomState = {
+  position: new THREE.Vector3(
+    0,
+    2.8,
+    5
+  ),
+  target: new THREE.Vector3(
+    0,
+    1.5,
+    0
+  )
+};
 // ========================================
 // BACKGROUND TEXTURE CACHE
 // ========================================
