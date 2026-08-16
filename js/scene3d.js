@@ -2901,7 +2901,13 @@ if (mode === "Walk") {
 
 
     this.controls.update();
+this.zoomState.position.copy(
+  this.camera.position
+);
 
+this.zoomState.target.copy(
+  this.controls.target
+);
 
     this.renderer.render(
       this.scene,
