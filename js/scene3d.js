@@ -2932,27 +2932,41 @@ this.zoomState.target.copy(
 
 
   // ========================================
-  // RESET
-  // ========================================
+// RESET
+// ========================================
 
-  reset() {
+reset() {
 
-    this.playing = false;
+  this.playing = false;
 
-    this.elapsed = 0;
+  this.elapsed = 0;
 
-    this.camera.position.set(
-      7,
-      5,
-      9
+  // ----------------------------------------
+  // RESTORE LAST USER CAMERA POSITION
+  // ----------------------------------------
+
+  if (this.zoomState) {
+
+    this.camera.position.copy(
+      this.zoomState.position
     );
 
-    this.camera.lookAt(
-      0,
-      1,
-      0
+    this.controls.target.copy(
+      this.zoomState.target
     );
 
   }
+
+  // ----------------------------------------
+  // UPDATE CAMERA
+  // ----------------------------------------
+
+  this.camera.lookAt(
+    this.controls.target
+  );
+
+  this.camera.updateProjectionMatrix();
+
+  this.controls.update();
 
 }
