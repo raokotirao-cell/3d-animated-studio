@@ -2630,20 +2630,46 @@ this.elapsed = 0;
           index * 0.4;
 
 
-        // WALK
+        // ======================================
+// WALK — ACTUAL CHARACTER MOVEMENT
+// ======================================
 
-        if (mode === "Walk") {
+if (mode === "Walk") {
 
-          actor.position.z =
-            Math.sin(time * 2) *
-            0.5;
+  const duration =
+    Math.max(
+      0.5,
+      Number(this.sceneData.duration) || 10
+    );
 
-          actor.rotation.y =
-            Math.sin(time) *
-            0.15;
+  // Start position
+  const startZ = 0;
 
-        }
+  // End position
+  const endZ = -4;
 
+  // Smooth progress 0 → 1
+  const progress =
+    Math.min(
+      this.elapsed / duration,
+      1
+    );
+
+  // Move entire character
+  actor.position.z =
+    startZ +
+    (endZ - startZ) * progress;
+
+  // Small natural body movement
+  actor.position.y =
+    Math.abs(
+      Math.sin(time * 8)
+    ) * 0.04;
+
+  // Slight walking rotation
+  actor.rotation.y =
+    Math.sin(time * 8) * 0.04;
+}
 
         // JUMP
 
