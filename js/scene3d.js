@@ -285,25 +285,122 @@ this.backgroundTextures = {};
 
   actor(type, name, costume) {
 
-  // ========================================
-  // FARMER GLB CHARACTER
-  // ========================================
+// ========================================
+// FARMER GLB CHARACTER
+// ========================================
 
-  if (costume === "farmer") {
+if (costume === "farmer") {
 
-    const group =
-      new THREE.Group();
+  const group =
+    new THREE.Group();
 
-    group.name =
-      name || "Farmer";
+  group.name =
+    name || "Farmer";
 
-    this.gltfLoader.load(
-"./assets/characters/farmer/model-v6.glb",
+  this.gltfLoader.load(
 
-      gltf => {
+    "./assets/characters/farmer/model-v6.glb",
 
-        const model =
-          gltf.scene;
+    gltf => {
+
+      const model =
+        gltf.scene;
+
+      // ======================================
+      // AUTO FIT FARMER MODEL
+      // ======================================
+
+      const box =
+        new THREE.Box3().setFromObject(model);
+
+      const size =
+        new THREE.Vector3();
+
+      const center =
+        new THREE.Vector3();
+
+      box.getSize(size);
+      box.getCenter(center);
+
+      // Target character height
+      const targetHeight = 3.2;
+
+      if (size.y > 0) {
+
+        const scale =
+          targetHeight / size.y;
+
+        model.scale.set(
+          scale,
+          scale,
+          scale
+        );
+      }
+
+      // Update bounding box after scaling
+      model.updateMatrixWorld(true);
+
+      const fittedBox =
+        new THREE.Box3().setFromObject(model);
+
+      const fittedCenter =
+        new THREE.Vector3();
+
+      fittedBox.getCenter(
+        fittedCenter
+      );
+
+      // Center character horizontally
+      model.position.x =
+        -fittedCenter.x;
+
+      model.position.z =
+        -fittedCenter.z;
+
+      // Put feet exactly on ground
+      model.position.y =
+        -fittedBox.min.y;
+
+      // ======================================
+      // SHADOWS
+      // ======================================
+
+      model.traverse(
+        object => {
+
+          if (object.isMesh) {
+
+            object.castShadow =
+              true;
+
+            object.receiveShadow =
+              true;
+          }
+
+        }
+      );
+
+      group.add(model);
+
+    },
+
+    undefined,
+
+    error => {
+
+      console.error(
+        "Farmer model failed to load:",
+        error
+      );
+
+    }
+
+  );
+
+  return group;
+}
+
+
 
         // ======================================
 // FARMER MODEL SIZE / POSITION
