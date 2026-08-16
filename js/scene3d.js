@@ -90,7 +90,12 @@ this.camera.lookAt(
         this.camera,
         this.renderer.domElement
       );
+this.controls.enableZoom = true;
 
+this.controls.minDistance = 3;
+this.controls.maxDistance = 12;
+
+this.controls.zoomSpeed = 0.8;
     this.controls.enableDamping =
       true;
 
