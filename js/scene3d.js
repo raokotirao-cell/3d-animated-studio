@@ -2970,3 +2970,5 @@ reset() {
   this.controls.update();
 
 }
+  
+}
