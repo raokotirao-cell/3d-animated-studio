@@ -309,9 +309,9 @@ this.backgroundTextures = {};
 // FARMER MODEL SIZE / POSITION
 // ======================================
 model.scale.set(
-  1.4,
-  1.4,
-  1.4
+  2.4,
+  2.4,
+  2.4
 );
 
 model.position.set(
