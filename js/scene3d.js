@@ -299,17 +299,21 @@ this.backgroundTextures = {};
         const model =
           gltf.scene;
 
-        model.scale.set(
-          1,
-          1,
-          1
-        );
+        // ======================================
+// FARMER MODEL SIZE / POSITION
+// ======================================
 
-        model.position.set(
-          0,
-          0,
-          0
-        );
+model.scale.set(
+  0.55,
+  0.55,
+  0.55
+);
+
+model.position.set(
+  0,
+  0,
+  0
+);
 
         group.add(
           model
