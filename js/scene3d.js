@@ -323,7 +323,7 @@ if (costume === "farmer") {
       box.getCenter(center);
 
       // Target character height
-      const targetHeight = 4.2;
+      const targetHeight = 5.2;
 
       if (size.y > 0) {
 
