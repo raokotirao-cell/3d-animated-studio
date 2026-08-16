@@ -399,48 +399,7 @@ if (costume === "farmer") {
 
   return group;
 }
-
-
-
-        // ======================================
-// FARMER MODEL SIZE / POSITION
-// ======================================
-model.scale.set(
-  5.0,
-  5.0,
-  5.0
-);
-
-model.position.set(
-  0,
-  0,
-  0
-);
-
-        group.add(
-          model
-        );
-
-      },
-
-      undefined,
-
-      error => {
-
-        console.error(
-          "Farmer model failed to load:",
-          error
-        );
-
-      }
-
-    );
-
-    return group;
-  }
-
-
-  // ========================================
+// ========================================
   // EXISTING ACTOR CODE
   // ========================================
 
