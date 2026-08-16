@@ -413,23 +413,6 @@ if (costume === "farmer") {
 
   return group;
 }
-// ========================================
-  // EXISTING ACTOR CODE
-  // ========================================
-
-  if (
-    type === "human" ||
-    type === "female" ||
-    type === "child"
-  ) {
-
-    return this.cartoonHuman(
-      name,
-      costume || "casual",
-      type
-    );
-
-  }
 
   // ========================================
   // CARTOON HUMAN
