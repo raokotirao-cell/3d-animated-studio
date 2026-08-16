@@ -292,8 +292,7 @@ this.backgroundTextures = {};
       name || "Farmer";
 
     this.gltfLoader.load(
-
-      "./assets/characters/farmer/model.glb",
+"./assets/characters/farmer/model-v5.glb",
 
       gltf => {
 
