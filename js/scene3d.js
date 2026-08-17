@@ -2695,34 +2695,10 @@ this.elapsed = 0;
         const time =
           this.elapsed +
           index * 0.4;
+// --------------------------------------
+// WALK ANIMATION
+// --------------------------------------
 
-  // --------------------------------------
-  // Move character forward
-  // --------------------------------------
-
-  actor.position.z =
-    startZ +
-    (endZ - startZ) * progress;
-
-  // --------------------------------------
-  // Natural walking bounce
-  // --------------------------------------
-
-  actor.position.y =
-    Math.abs(
-      Math.sin(time * 8)
-    ) * 0.04;
-
-  // --------------------------------------
-  // Slight body movement
-  // --------------------------------------
-
-  actor.rotation.y =
-    Math.sin(time * 8) * 0.04;
-
-  // --------------------------------------
-  // Arm / leg movement
-  // --------------------------------------
 if (mode === "Walk") {
 
   const duration =
@@ -2744,16 +2720,17 @@ if (mode === "Walk") {
     startZ +
     (endZ - startZ) * progress;
 
+  // Natural walking bounce
   actor.position.y =
     Math.abs(
       Math.sin(time * 8)
     ) * 0.04;
 
+  // Slight body movement
   actor.rotation.y =
     Math.sin(time * 8) * 0.04;
 
 }
-  
     // ====================================
     // CAMERA
     // ====================================
