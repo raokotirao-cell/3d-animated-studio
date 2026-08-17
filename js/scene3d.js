@@ -32,21 +32,15 @@ export class Studio3D {
     // Camera
     // -------------------------------
 
-    this.camera =
-      new THREE.PerspectiveCamera(
-        45,
-        16 / 9,
-        0.1,
-        100
-      );
-this.camera.position.set(
+    this.camera.position.set(
   0,
-  2.8,
-  5
+  3.0,
+  6.5
 );
+
 this.camera.lookAt(
   0,
-  1.5,
+  2.0,
   0
 );
 
