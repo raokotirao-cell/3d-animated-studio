@@ -2745,58 +2745,41 @@ if (mode === "Walk") {
 
   actor.rotation.y =
     Math.sin(time * 8) * 0.04;
-
+walkSwing
   // --------------------------------------
   // Arm / leg movement
   // --------------------------------------
+if (mode === "Walk") {
 
-  const walkSwing =
-    Math.sin(time * 8) * 0.25;
+  const duration =
+    Math.max(
+      0.5,
+      Number(this.sceneData.duration) || 10
+    );
 
-  actor.children.forEach(
-    child => {
+  const startZ = 0;
+  const endZ = -4;
 
-      // Arms
-      if (
-        child.geometry &&
-        child.geometry.type ===
-          "CapsuleGeometry"
-      ) {
+  const progress =
+    Math.min(
+      this.elapsed / duration,
+      1
+    );
 
-        if (
-          child.position.y > 1.0 &&
-          child.position.y < 1.7
-        ) {
+  actor.position.z =
+    startZ +
+    (endZ - startZ) * progress;
 
-          child.rotation.z =
-            walkSwing *
-            Math.sign(
-              child.position.x || 1
-            );
+  actor.position.y =
+    Math.abs(
+      Math.sin(time * 8)
+    ) * 0.04;
 
-        }
-
-        // Legs
-        if (
-          child.position.y > 0.2 &&
-          child.position.y < 0.8
-        ) {
-
-          child.rotation.x =
-            walkSwing *
-            Math.sign(
-              child.position.x || 1
-            );
-
-        }
-
-      }
-
-    }
-  );
+  actor.rotation.y =
+    Math.sin(time * 8) * 0.04;
 
 }
-
+  
     // ====================================
     // CAMERA
     // ====================================
