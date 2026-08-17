@@ -40,8 +40,8 @@ this.camera =
   );
     this.camera.position.set(
   0,
-  3.0,
-  6.5
+  3.2,
+  8.0
 );
 
 this.camera.lookAt(
