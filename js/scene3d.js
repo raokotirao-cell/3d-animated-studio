@@ -2701,6 +2701,10 @@ this.elapsed = 0;
 // WALK — ACTUAL CHARACTER MOVEMENT
 // ======================================
 
+// ======================================
+// WALK — CHARACTER MOVEMENT
+// ======================================
+
 if (mode === "Walk") {
 
   const duration =
@@ -2709,87 +2713,89 @@ if (mode === "Walk") {
       Number(this.sceneData.duration) || 10
     );
 
-  // Start position
   const startZ = 0;
-
-  // End position
   const endZ = -4;
 
-  // Smooth progress 0 → 1
   const progress =
     Math.min(
       this.elapsed / duration,
       1
     );
 
-  // Move entire character
+  // --------------------------------------
+  // Move character forward
+  // --------------------------------------
+
   actor.position.z =
     startZ +
     (endZ - startZ) * progress;
 
-  // Small natural body movement
+  // --------------------------------------
+  // Natural walking bounce
+  // --------------------------------------
+
   actor.position.y =
     Math.abs(
       Math.sin(time * 8)
     ) * 0.04;
 
-  // Slight walking rotation
+  // --------------------------------------
+  // Slight body movement
+  // --------------------------------------
+
   actor.rotation.y =
     Math.sin(time * 8) * 0.04;
-}
 
-        // JUMP
+  // --------------------------------------
+  // Arm / leg movement
+  // --------------------------------------
 
-        if (mode === "Jump") {
+  const walkSwing =
+    Math.sin(time * 8) * 0.25;
 
-          actor.position.y =
-            Math.abs(
-              Math.sin(time * 2)
-            ) * 1.2;
+  actor.children.forEach(
+    child => {
 
-        }
+      // Arms
+      if (
+        child.geometry &&
+        child.geometry.type ===
+          "CapsuleGeometry"
+      ) {
 
+        if (
+          child.position.y > 1.0 &&
+          child.position.y < 1.7
+        ) {
 
-        // WAVE
-
-        if (mode === "Wave") {
-
-          if (actor.children[3]) {
-
-            actor.children[3]
-              .rotation.z =
-              Math.sin(time * 4) *
-              0.8;
-
-          }
-
-        }
-
-
-        // FLOAT
-
-        if (mode === "Float") {
-
-          actor.position.y =
-            Math.sin(time * 2) *
-            0.35;
+          child.rotation.z =
+            walkSwing *
+            Math.sign(
+              child.position.x || 1
+            );
 
         }
 
+        // Legs
+        if (
+          child.position.y > 0.2 &&
+          child.position.y < 0.8
+        ) {
 
-        // DANCE
-
-        if (mode === "Dance") {
-
-          actor.rotation.y =
-            Math.sin(time * 4) *
-            0.4;
+          child.rotation.x =
+            walkSwing *
+            Math.sign(
+              child.position.x || 1
+            );
 
         }
 
       }
-    );
 
+    }
+  );
+
+}
 
     // ====================================
     // CAMERA
