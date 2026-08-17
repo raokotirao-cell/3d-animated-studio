@@ -2719,7 +2719,7 @@ this.elapsed = 0;
 
   actor.rotation.y =
     Math.sin(time * 8) * 0.04;
-walkSwing
+
   // --------------------------------------
   // Arm / leg movement
   // --------------------------------------
