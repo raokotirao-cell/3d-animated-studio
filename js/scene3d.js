@@ -190,18 +190,17 @@ this.gltfLoader = new GLTFLoader();
     this.elapsed = 0;
 
     this.playing = false;
+this.sceneData = null;
 
-    this.sceneData = null;
-    this.zoomState = {
-  this.zoomState = {
+this.zoomState = {
   position: new THREE.Vector3(
     0,
-    3.0,
-    6.5
+    2.8,
+    5
   ),
   target: new THREE.Vector3(
     0,
-    2.0,
+    1.5,
     0
   )
 };
