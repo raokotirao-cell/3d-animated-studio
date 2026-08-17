@@ -2770,57 +2770,7 @@ animate(delta) {
   );
 
 
-  // ====================================
-  // CAMERA
-  // ====================================
-
-  const camera =
-    this.sceneData.camera;
-
-
-  if (camera === "Pan") {
-
-    this.camera.position.x =
-      Math.sin(
-        this.elapsed * 0.25
-      ) * 8;
-
-  }
-
-
-  if (camera === "Zoom") {
-
-    this.camera.position.z =
-      9 -
-      Math.min(
-        4,
-        this.elapsed * 0.3
-      );
-
-  }
-
-
-  if (camera === "Orbit") {
-
-    this.camera.position.x =
-      Math.cos(
-        this.elapsed * 0.25
-      ) * 9;
-
-    this.camera.position.z =
-      Math.sin(
-        this.elapsed * 0.25
-      ) * 9;
-
-    this.camera.lookAt(
-      0,
-      1,
-      0
-    );
-
-  }
-
-}
+  
     // ====================================
     // CAMERA
     // ====================================
