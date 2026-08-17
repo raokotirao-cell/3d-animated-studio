@@ -2696,32 +2696,6 @@ this.elapsed = 0;
           this.elapsed +
           index * 0.4;
 
-
-        // ======================================
-// WALK — ACTUAL CHARACTER MOVEMENT
-// ======================================
-
-// ======================================
-// WALK — CHARACTER MOVEMENT
-// ======================================
-
-if (mode === "Walk") {
-
-  const duration =
-    Math.max(
-      0.5,
-      Number(this.sceneData.duration) || 10
-    );
-
-  const startZ = 0;
-  const endZ = -4;
-
-  const progress =
-    Math.min(
-      this.elapsed / duration,
-      1
-    );
-
   // --------------------------------------
   // Move character forward
   // --------------------------------------
