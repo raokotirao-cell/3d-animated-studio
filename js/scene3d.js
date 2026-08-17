@@ -2672,63 +2672,153 @@ const actor =
 this.elapsed = 0;
 
 }
-  
-  // ========================================
-  // ANIMATION
-  // ========================================
+// ========================================
+// ANIMATION
+// ========================================
 
-  animate(delta) {
+animate(delta) {
 
-    if (!this.sceneData) {
-      return;
+  if (!this.sceneData) {
+    return;
+  }
+
+  const mode =
+    this.sceneData.animation || "None";
+
+  this.actors.forEach(
+    (actor, index) => {
+
+      const time =
+        this.elapsed +
+        index * 0.4;
+
+      // ======================================
+      // WALK
+      // ======================================
+
+      if (mode === "Walk") {
+
+        const duration =
+          Math.max(
+            0.5,
+            Number(this.sceneData.duration) || 10
+          );
+
+        // -------------------------------
+        // Forward movement
+        // -------------------------------
+
+        const progress =
+          Math.min(
+            this.elapsed / duration,
+            1
+          );
+
+        actor.position.z =
+          -4 * progress;
+
+        // -------------------------------
+        // Walking bounce
+        // -------------------------------
+
+        actor.position.y =
+          Math.abs(
+            Math.sin(time * 10)
+          ) * 0.06;
+
+        // -------------------------------
+        // Body movement
+        // -------------------------------
+
+        actor.rotation.y =
+          Math.sin(time * 10) * 0.035;
+
+        // -------------------------------
+        // Arms + legs
+        // -------------------------------
+
+        actor.traverse(
+          object => {
+
+            if (
+              !object.isMesh ||
+              !object.geometry
+            ) {
+              return;
+            }
+
+            // Don't rotate face/body parts
+            // Just create subtle overall walking motion
+          }
+        );
+
+      }
+
+      // ======================================
+      // NONE
+      // ======================================
+
+      else {
+
+        actor.position.y = 0;
+
+        actor.rotation.y = 0;
+
+      }
+
     }
+  );
 
 
-    const mode =
-      this.sceneData.animation ||
-      "None";
+  // ====================================
+  // CAMERA
+  // ====================================
+
+  const camera =
+    this.sceneData.camera;
 
 
-    this.actors.forEach(
-      (actor, index) => {
+  if (camera === "Pan") {
 
-        const time =
-          this.elapsed +
-          index * 0.4;
-// --------------------------------------
-// WALK ANIMATION
-// --------------------------------------
+    this.camera.position.x =
+      Math.sin(
+        this.elapsed * 0.25
+      ) * 8;
 
-if (mode === "Walk") {
+  }
 
-  const duration =
-    Math.max(
-      0.5,
-      Number(this.sceneData.duration) || 10
+
+  if (camera === "Zoom") {
+
+    this.camera.position.z =
+      9 -
+      Math.min(
+        4,
+        this.elapsed * 0.3
+      );
+
+  }
+
+
+  if (camera === "Orbit") {
+
+    this.camera.position.x =
+      Math.cos(
+        this.elapsed * 0.25
+      ) * 9;
+
+    this.camera.position.z =
+      Math.sin(
+        this.elapsed * 0.25
+      ) * 9;
+
+    this.camera.lookAt(
+      0,
+      1,
+      0
     );
 
-  const startZ = 0;
-  const endZ = -4;
-
-  const progress =
-    Math.min(
-      this.elapsed / duration,
-      1
-    );
-
-  actor.position.z =
-    startZ +
-    (endZ - startZ) * progress;
-
-  // Natural walking bounce
-  actor.position.y =
-    Math.abs(
-      Math.sin(time * 8)
-    ) * 0.04;
-
-  // Slight body movement
-  actor.rotation.y =
-    Math.sin(time * 8) * 0.04;
+  }
 
 }
     // ====================================
