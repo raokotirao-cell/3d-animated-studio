@@ -2902,17 +2902,24 @@ this.zoomState.target.copy(
       this.camera
     );
 
+if (
+  this.onTime &&
+  (
+    !this._lastTimeUpdate ||
+    this.elapsed - this._lastTimeUpdate >= 0.1
+  )
+) {
 
-    if (this.onTime) {
+  this._lastTimeUpdate =
+    this.elapsed;
 
-      this.onTime(
-        this.elapsed
-      );
+  this.onTime(
+    this.elapsed
+  );
 
-    }
+}
 
   }
-
 
   // ========================================
   // PLAY
