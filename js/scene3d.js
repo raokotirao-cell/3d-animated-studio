@@ -90,6 +90,11 @@ this.camera.lookAt(
         this.camera,
         this.renderer.domElement
       );
+    this.controls.target.set(
+  0,
+  2.0,
+  0
+);
 this.controls.enableZoom = true;
 
 this.controls.minDistance = 3;
