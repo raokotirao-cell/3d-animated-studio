@@ -357,7 +357,7 @@ if (
 
   group.userData.actions =
     actions;
-
+group.userData.isGLB = true;
   console.log(
     "Farmer GLB animations:",
     clips.map(
