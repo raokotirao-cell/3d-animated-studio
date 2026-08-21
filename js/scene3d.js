@@ -2672,7 +2672,7 @@ const actor =
 this.elapsed = 0;
 
 }
-// ========================================
+  // ========================================
 // ANIMATION
 // ========================================
 
@@ -2718,7 +2718,17 @@ animate(delta) {
           4 * progress;
 
         // -------------------------------
-        // Walking bounce
+        // Walking cycle
+        // -------------------------------
+
+        const walk =
+          Math.sin(time * 10);
+
+        const walkOpposite =
+          Math.sin(time * 10 + Math.PI);
+
+        // -------------------------------
+        // Body bounce
         // -------------------------------
 
         actor.position.y =
@@ -2727,15 +2737,16 @@ animate(delta) {
           ) * 0.06;
 
         // -------------------------------
-        // Body movement
+        // Body sway
         // -------------------------------
 
         actor.rotation.y =
           Math.sin(time * 10) * 0.035;
 
-        // -------------------------------
-        // Arms + legs
-        // -------------------------------
+
+        // ==================================
+        // CHARACTER PART ANIMATION
+        // ==================================
 
         actor.traverse(
           object => {
@@ -2747,12 +2758,157 @@ animate(delta) {
               return;
             }
 
-            // Don't rotate face/body parts
-            // Just create subtle overall walking motion
+            // --------------------------------
+            // Save original transform once
+            // --------------------------------
+
+            if (
+              !object.userData.walkBase
+            ) {
+
+              object.userData.walkBase = {
+
+                x:
+                  object.position.x,
+
+                y:
+                  object.position.y,
+
+                z:
+                  object.position.z,
+
+                rotationX:
+                  object.rotation.x,
+
+                rotationY:
+                  object.rotation.y,
+
+                rotationZ:
+                  object.rotation.z
+
+              };
+
+            }
+
+            const base =
+              object.userData.walkBase;
+
+
+            // ==================================
+            // LEGS
+            // ==================================
+
+            if (
+              Math.abs(object.position.x) <= 0.35 &&
+              object.position.y > 0.05 &&
+              object.position.y < 0.90
+            ) {
+
+              const side =
+                object.position.x < 0
+                  ? -1
+                  : 1;
+
+              object.rotation.z =
+                base.rotationZ +
+                (
+                  side *
+                  walk *
+                  0.45
+                );
+
+            }
+
+
+            // ==================================
+            // ARMS
+            // ==================================
+
+            else if (
+              Math.abs(object.position.x) > 0.50 &&
+              object.position.y > 0.75 &&
+              object.position.y < 1.85
+            ) {
+
+              const side =
+                object.position.x < 0
+                  ? -1
+                  : 1;
+
+              object.rotation.z =
+                base.rotationZ +
+                (
+                  side *
+                  walkOpposite *
+                  0.40
+                );
+
+            }
+
+
+            // ==================================
+            // HANDS
+            // ==================================
+
+            else if (
+              Math.abs(object.position.x) > 0.65 &&
+              object.position.y > 0.80 &&
+              object.position.y < 1.15
+            ) {
+
+              const side =
+                object.position.x < 0
+                  ? -1
+                  : 1;
+
+              object.position.y =
+                base.y +
+                (
+                  Math.abs(
+                    Math.sin(
+                      time * 10 +
+                      (side < 0 ? 0 : Math.PI)
+                    )
+                  ) * 0.08
+                );
+
+              object.rotation.z =
+                base.rotationZ +
+                (
+                  side *
+                  walkOpposite *
+                  0.20
+                );
+
+            }
+
+
+            // ==================================
+            // FACE / HEAD
+            // ==================================
+
+            else if (
+              object.position.y > 2.0 &&
+              object.position.z > 0.25
+            ) {
+
+              object.position.y =
+                base.y +
+                Math.sin(time * 5) *
+                0.018;
+
+              object.rotation.x =
+                base.rotationX +
+                Math.sin(time * 5) *
+                0.015;
+
+            }
+
           }
         );
 
       }
+
 
       // ======================================
       // NONE
@@ -2770,59 +2926,57 @@ animate(delta) {
   );
 
 
-  
-    // ====================================
-    // CAMERA
-    // ====================================
+  // ====================================
+  // CAMERA
+  // ====================================
 
-    const camera =
-      this.sceneData.camera;
-
-
-    if (camera === "Pan") {
-
-      this.camera.position.x =
-        Math.sin(
-          this.elapsed * 0.25
-        ) * 8;
-
-    }
+  const camera =
+    this.sceneData.camera;
 
 
-    if (camera === "Zoom") {
+  if (camera === "Pan") {
 
-      this.camera.position.z =
-        9 -
-        Math.min(
-          4,
-          this.elapsed * 0.3
-        );
-
-    }
-
-
-    if (camera === "Orbit") {
-
-      this.camera.position.x =
-        Math.cos(
-          this.elapsed * 0.25
-        ) * 9;
-
-      this.camera.position.z =
-        Math.sin(
-          this.elapsed * 0.25
-        ) * 9;
-
-      this.camera.lookAt(
-        0,
-        1,
-        0
-      );
-
-    }
+    this.camera.position.x =
+      Math.sin(
+        this.elapsed * 0.25
+      ) * 8;
 
   }
 
+
+  if (camera === "Zoom") {
+
+    this.camera.position.z =
+      9 -
+      Math.min(
+        4,
+        this.elapsed * 0.3
+      );
+
+  }
+
+
+  if (camera === "Orbit") {
+
+    this.camera.position.x =
+      Math.cos(
+        this.elapsed * 0.25
+      ) * 9;
+
+    this.camera.position.z =
+      Math.sin(
+        this.elapsed * 0.25
+      ) * 9;
+
+    this.camera.lookAt(
+      0,
+      1,
+      0
+    );
+
+  }
+
+}
 
   // ========================================
   // RENDER LOOP
