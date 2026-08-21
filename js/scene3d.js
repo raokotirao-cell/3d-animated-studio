@@ -2920,88 +2920,94 @@ animate(delta) {
             // LEGS
             // ==================================
 
-            if (
-              Math.abs(base.x) >= 0.12 &&
-              Math.abs(base.x) <= 0.35 &&
-              base.y >= 0.05 &&
-              base.y <= 0.90
-            ) {
+[-1, 1].forEach(side => {
 
-              const side =
-                base.x < 0
-                  ? -1
-                  : 1;
+  const leg = addMesh(
 
-              object.rotation.z =
-                base.rotationZ +
-                side *
-                walk *
-                0.55;
+    new THREE.CapsuleGeometry(
+      0.17,
+      0.70,
+      10,
+      18
+    ),
 
-            }
+    blackMaterial,
 
+    [
+      side * 0.21,
+      0.47,
+      0
+    ]
+
+  );
+
+  leg.userData.bodyPart = "leg";
+  leg.userData.side = side;
+
+});
 
             // ==================================
             // ARMS
             // ==================================
+[-1, 1].forEach(side => {
 
-            else if (
-              Math.abs(base.x) >= 0.55 &&
-              Math.abs(base.x) <= 0.85 &&
-              base.y >= 1.10 &&
-              base.y <= 1.85
-            ) {
+  const arm =
+    addMesh(
 
-              const side =
-                base.x < 0
-                  ? -1
-                  : 1;
+      new THREE.CapsuleGeometry(
+        0.145,
+        0.66,
+        10,
+        18
+      ),
 
-              object.rotation.z =
-                base.rotationZ +
-                side *
-                walkOpposite *
-                0.50;
+      clothesMaterial,
 
-            }
+      [
+        side * 0.70,
+        1.38,
+        0
+      ]
 
+    );
 
+  arm.rotation.z =
+    side * 0.12;
+
+  arm.userData.bodyPart = "arm";
+  arm.userData.side = side;
+
+});
             // ==================================
             // HANDS
             // ==================================
 
-            else if (
-              Math.abs(base.x) >= 0.65 &&
-              Math.abs(base.x) <= 0.95 &&
-              base.y >= 0.75 &&
-              base.y <= 1.15
-            ) {
+            const hand = addMesh(
 
-              const side =
-                base.x < 0
-                  ? -1
-                  : 1;
+  new THREE.SphereGeometry(
+    0.17,
+    24,
+    18
+  ),
 
-              object.position.y =
-                base.y +
-                Math.abs(
-                  Math.sin(
-                    time * 10 +
-                    (
-                      side < 0
-                        ? 0
-                        : Math.PI
-                    )
-                  )
-                ) * 0.07;
+  skinMaterial,
 
-              object.rotation.z =
-                base.rotationZ +
-                side *
-                walkOpposite *
-                0.25;
+  [
+    side * 0.79,
+    0.98,
+    0
+  ],
 
-            }
+  [
+    0.95,
+    1.08,
+    0.82
+  ]
+
+);
+
+hand.userData.bodyPart = "hand";
+hand.userData.side = side;
 
 
             // ==================================
