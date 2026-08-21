@@ -338,19 +338,39 @@ if (
 
   const clips =
     gltf.animations;
+const actions = [];
 
-  const actions = [];
+// Find proper walking animation
+const walkClip =
+  clips.find(clip =>
+    /walk|walking|run|running|locomotion/i.test(
+      clip.name
+    )
+  );
 
-  clips.forEach(clip => {
+if (walkClip) {
 
-    const action =
-      mixer.clipAction(clip);
+  const action =
+    mixer.clipAction(walkClip);
 
-    action.play();
+  action.reset();
+  action.play();
 
-    actions.push(action);
+  actions.push(action);
 
-  });
+  console.log(
+    "Farmer WALK animation selected:",
+    walkClip.name
+  );
+
+} else {
+
+  console.warn(
+    "No WALK animation found. Available animations:",
+    clips.map(clip => clip.name)
+  );
+
+}
 
   group.userData.mixer =
     mixer;
