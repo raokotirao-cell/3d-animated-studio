@@ -2997,42 +2997,6 @@ actor.traverse(
   }
 );
 
-            // --------------------------------
-            // Save original transform once
-            // --------------------------------
-
-            if (
-              !object.userData.walkBase
-            ) {
-
-              object.userData.walkBase = {
-
-                x:
-                  object.position.x,
-
-                y:
-                  object.position.y,
-
-                z:
-                  object.position.z,
-
-                rotationX:
-                  object.rotation.x,
-
-                rotationY:
-                  object.rotation.y,
-
-                rotationZ:
-                  object.rotation.z
-
-              };
-
-            }
-
-            const base =
-              object.userData.walkBase;
-
-
             // ==================================
             // LEGS
             // ==================================
