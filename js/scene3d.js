@@ -2715,7 +2715,7 @@ animate(delta) {
           );
 
         actor.position.z =
-          -4 * progress;
+          4 * progress;
 
         // -------------------------------
         // Walking bounce
