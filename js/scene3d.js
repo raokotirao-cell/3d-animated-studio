@@ -2737,52 +2737,7 @@ animate(delta) {
       const time =
         this.elapsed +
         index * 0.4;
-// ======================================
-// GLB CHARACTER
-// ======================================
 
-if (actor.userData.isGLB) {
-
-  // GLB skeletal animation
-  if (actor.userData.mixer) {
-
-    actor.userData.mixer.update(delta);
-
-  }
-
-  if (mode === "Walk") {
-
-    const duration =
-      Math.max(
-        0.5,
-        Number(this.sceneData.duration) || 10
-      );
-
-    const progress =
-      Math.min(
-        this.elapsed / duration,
-        1
-      );
-
-    // Forward movement
-    actor.position.z =
-      4 * progress;
-
-    // Small natural movement
-    actor.position.y =
-      Math.abs(
-        Math.sin(time * 8)
-      ) * 0.025;
-
-    actor.rotation.y =
-      Math.sin(time * 8) * 0.02;
-
-  }
-
-  // Skip normal primitive-part animation
-  return;
-
-}
       // ======================================
       // WALK
       // ======================================
