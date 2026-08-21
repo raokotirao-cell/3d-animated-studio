@@ -2856,18 +2856,146 @@ const duration =
 
 
         // ==================================
-        // CHARACTER PART ANIMATION
-        // ==================================
+// CHARACTER PART ANIMATION
+// ==================================
 
-        actor.traverse(
-          object => {
+actor.traverse(
+  object => {
 
-            if (
-              !object.isMesh ||
-              !object.geometry
-            ) {
-              return;
-            }
+    if (
+      !object.isMesh ||
+      !object.geometry
+    ) {
+      return;
+    }
+
+    // --------------------------------
+    // Save original transform once
+    // --------------------------------
+
+    if (!object.userData.walkBase) {
+
+      object.userData.walkBase = {
+
+        x: object.position.x,
+        y: object.position.y,
+        z: object.position.z,
+
+        rotationX: object.rotation.x,
+        rotationY: object.rotation.y,
+        rotationZ: object.rotation.z
+
+      };
+
+    }
+
+    const base =
+      object.userData.walkBase;
+
+
+    // ==================================
+    // LEGS
+    // ==================================
+
+    if (
+      Math.abs(object.position.x) >= 0.12 &&
+      Math.abs(object.position.x) <= 0.35 &&
+      object.position.y >= 0.05 &&
+      object.position.y <= 0.90
+    ) {
+
+      const side =
+        object.position.x < 0
+          ? -1
+          : 1;
+
+      object.rotation.z =
+        base.rotationZ +
+        side * walk * 0.55;
+
+    }
+
+
+    // ==================================
+    // ARMS
+    // ==================================
+
+    else if (
+      Math.abs(object.position.x) >= 0.55 &&
+      object.position.y >= 0.80 &&
+      object.position.y <= 1.85
+    ) {
+
+      const side =
+        object.position.x < 0
+          ? -1
+          : 1;
+
+      object.rotation.z =
+        base.rotationZ +
+        side * walkOpposite * 0.50;
+
+    }
+
+
+    // ==================================
+    // HANDS
+    // ==================================
+
+    else if (
+      Math.abs(object.position.x) >= 0.65 &&
+      object.position.y >= 0.75 &&
+      object.position.y <= 1.15
+    ) {
+
+      const side =
+        object.position.x < 0
+          ? -1
+          : 1;
+
+      object.position.y =
+        base.y +
+        Math.abs(
+          Math.sin(
+            time * 10 +
+            (side < 0 ? 0 : Math.PI)
+          )
+        ) * 0.07;
+
+      object.rotation.z =
+        base.rotationZ +
+        side * walkOpposite * 0.25;
+
+    }
+
+
+    // ==================================
+    // FACE / HEAD
+    // ==================================
+
+    else if (
+      object.position.y > 2.0 &&
+      object.position.z > 0.25
+    ) {
+
+      // Head bob
+      object.position.y =
+        base.y +
+        Math.sin(time * 5) * 0.025;
+
+      // Natural head movement
+      object.rotation.x =
+        base.rotationX +
+        Math.sin(time * 5) * 0.025;
+
+      object.rotation.y =
+        base.rotationY +
+        Math.sin(time * 3) * 0.018;
+
+    }
+
+  }
+);
 
             // --------------------------------
             // Save original transform once
