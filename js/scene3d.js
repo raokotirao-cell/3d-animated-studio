@@ -315,7 +315,7 @@ if (costume === "farmer") {
 
   group.name =
     name || "Farmer";
-
+group.userData.isGLB = true;
   this.gltfLoader.load(
 
     "./assets/characters/farmer/model-v6.glb",
@@ -357,7 +357,6 @@ if (
 
   group.userData.actions =
     actions;
-group.userData.isGLB = true;
   console.log(
     "Farmer GLB animations:",
     clips.map(
