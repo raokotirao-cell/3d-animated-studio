@@ -2863,187 +2863,175 @@ animate(delta) {
             time * 10
           ) * 0.035;
 
+// ======================================
+// CHARACTER PARTS
+// ======================================
 
-        // ======================================
-        // CHARACTER PARTS
-        // ======================================
+actor.traverse(
+  object => {
 
-        actor.traverse(
-          object => {
+    if (
+      !object.isMesh ||
+      !object.geometry
+    ) {
+      return;
+    }
 
-            if (
-              !object.isMesh ||
-              !object.geometry
-            ) {
-              return;
-            }
+    // --------------------------------
+    // Save original transform
+    // --------------------------------
 
+    if (
+      !object.userData.walkBase
+    ) {
 
-            // --------------------------------
-            // Save original transform
-            // --------------------------------
+      object.userData.walkBase = {
 
-            if (
-              !object.userData.walkBase
-            ) {
+        x:
+          object.position.x,
 
-              object.userData.walkBase = {
+        y:
+          object.position.y,
 
-                x:
-                  object.position.x,
+        z:
+          object.position.z,
 
-                y:
-                  object.position.y,
+        rotationX:
+          object.rotation.x,
 
-                z:
-                  object.position.z,
+        rotationY:
+          object.rotation.y,
 
-                rotationX:
-                  object.rotation.x,
+        rotationZ:
+          object.rotation.z
 
-                rotationY:
-                  object.rotation.y,
+      };
 
-                rotationZ:
-                  object.rotation.z
+    }
 
-              };
-
-            }
-
-
-            const base =
-              object.userData.walkBase;
+    const base =
+      object.userData.walkBase;
 
 
-            // ==================================
-            // LEGS
-            // ==================================
+    // ==================================
+    // LEGS
+    // ==================================
 
-[-1, 1].forEach(side => {
+    if (
+      Math.abs(base.x) >= 0.12 &&
+      Math.abs(base.x) <= 0.35 &&
+      base.y >= 0.05 &&
+      base.y <= 0.90
+    ) {
 
-  const leg = addMesh(
+      const side =
+        base.x < 0
+          ? -1
+          : 1;
 
-    new THREE.CapsuleGeometry(
-      0.17,
-      0.70,
-      10,
-      18
-    ),
+      object.rotation.z =
+        base.rotationZ +
+        side *
+        walk *
+        0.55;
 
-    blackMaterial,
+    }
 
-    [
-      side * 0.21,
-      0.47,
-      0
-    ]
 
-  );
+    // ==================================
+    // ARMS
+    // ==================================
 
-  leg.userData.bodyPart = "leg";
-  leg.userData.side = side;
+    else if (
+      Math.abs(base.x) >= 0.55 &&
+      Math.abs(base.x) <= 0.85 &&
+      base.y >= 1.10 &&
+      base.y <= 1.85
+    ) {
 
-});
+      const side =
+        base.x < 0
+          ? -1
+          : 1;
 
-            // ==================================
-            // ARMS
-            // ==================================
-[-1, 1].forEach(side => {
+      object.rotation.z =
+        base.rotationZ +
+        side *
+        walkOpposite *
+        0.50;
 
-  const arm =
-    addMesh(
+    }
 
-      new THREE.CapsuleGeometry(
-        0.145,
-        0.66,
-        10,
-        18
-      ),
 
-      clothesMaterial,
+    // ==================================
+    // HANDS
+    // ==================================
 
-      [
-        side * 0.70,
-        1.38,
-        0
-      ]
+    else if (
+      Math.abs(base.x) >= 0.65 &&
+      Math.abs(base.x) <= 0.95 &&
+      base.y >= 0.75 &&
+      base.y <= 1.15
+    ) {
 
-    );
+      const side =
+        base.x < 0
+          ? -1
+          : 1;
 
-  arm.rotation.z =
-    side * 0.12;
+      object.position.y =
+        base.y +
+        Math.abs(
+          Math.sin(
+            time * 10 +
+            (
+              side < 0
+                ? 0
+                : Math.PI
+            )
+          )
+        ) * 0.07;
 
-  arm.userData.bodyPart = "arm";
-  arm.userData.side = side;
+      object.rotation.z =
+        base.rotationZ +
+        side *
+        walkOpposite *
+        0.25;
 
-});
-            // ==================================
-            // HANDS
-            // ==================================
+    }
 
-            const hand = addMesh(
 
-  new THREE.SphereGeometry(
-    0.17,
-    24,
-    18
-  ),
+    // ==================================
+    // FACE / HEAD MOVEMENT
+    // ==================================
 
-  skinMaterial,
+    else if (
+      base.y > 2.0 &&
+      base.z > 0.25
+    ) {
 
-  [
-    side * 0.79,
-    0.98,
-    0
-  ],
+      object.position.y =
+        base.y +
+        Math.sin(
+          time * 5
+        ) * 0.025;
 
-  [
-    0.95,
-    1.08,
-    0.82
-  ]
+      object.rotation.x =
+        base.rotationX +
+        Math.sin(
+          time * 5
+        ) * 0.025;
 
+      object.rotation.y =
+        base.rotationY +
+        Math.sin(
+          time * 3
+        ) * 0.018;
+
+    }
+
+  }
 );
-
-hand.userData.bodyPart = "hand";
-hand.userData.side = side;
-
-
-            // ==================================
-            // FACE / HEAD
-            // ==================================
-
-            else if (
-              base.y > 2.0 &&
-              base.z > 0.25
-            ) {
-
-              object.position.y =
-                base.y +
-                Math.sin(
-                  time * 5
-                ) * 0.025;
-
-              object.rotation.x =
-                base.rotationX +
-                Math.sin(
-                  time * 5
-                ) * 0.025;
-
-              object.rotation.y =
-                base.rotationY +
-                Math.sin(
-                  time * 3
-                ) * 0.018;
-
-            }
-
-          }
-        );
-
-      }
-
 
       // ======================================
       // NONE
