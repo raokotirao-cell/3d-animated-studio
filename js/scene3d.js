@@ -324,7 +324,54 @@ if (costume === "farmer") {
 
       const model =
         gltf.scene;
+// ======================================
+// GLB SKELETAL ANIMATION
+// ======================================
 
+if (
+  gltf.animations &&
+  gltf.animations.length > 0
+) {
+
+  const mixer =
+    new THREE.AnimationMixer(model);
+
+  const clips =
+    gltf.animations;
+
+  const actions = [];
+
+  clips.forEach(clip => {
+
+    const action =
+      mixer.clipAction(clip);
+
+    action.play();
+
+    actions.push(action);
+
+  });
+
+  group.userData.mixer =
+    mixer;
+
+  group.userData.actions =
+    actions;
+
+  console.log(
+    "Farmer GLB animations:",
+    clips.map(
+      clip => clip.name
+    )
+  );
+
+} else {
+
+  console.warn(
+    "Farmer GLB has NO skeletal animations."
+  );
+
+}
       // ======================================
       // AUTO FIT FARMER MODEL
       // ======================================
@@ -2697,7 +2744,15 @@ animate(delta) {
       // ======================================
 
       if (mode === "Walk") {
+// ======================================
+// GLB ANIMATION MIXER
+// ======================================
 
+if (actor.userData.mixer) {
+
+  actor.userData.mixer.update(delta);
+
+}
         const duration =
           Math.max(
             0.5,
