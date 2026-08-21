@@ -316,14 +316,78 @@ if (costume === "farmer") {
   group.name =
     name || "Farmer";
 group.userData.isGLB = true;
+ group.userData.glbModel = null;
+group.userData.mixer = null;
+group.userData.actions = [];
+group.userData.walkAction = null;
+group.userData.bones = {};
+group.userData.morphMeshes = []; 
   this.gltfLoader.load(
 
     "./assets/characters/farmer/model-v6.glb",
 
     gltf => {
+const model =
+  gltf.scene;
 
-      const model =
-        gltf.scene;
+group.userData.glbModel = model;
+
+// ======================================
+// FIND GLB BONES + MORPH TARGETS
+// ======================================
+
+const bones = {};
+const morphMeshes = [];
+
+model.traverse(object => {
+
+  // -------------------------------
+  // BONES
+  // -------------------------------
+
+  if (object.isBone) {
+
+    const key =
+      object.name
+        .toLowerCase()
+        .replace(/[\s_\-]/g, "");
+
+    bones[key] = object;
+
+  }
+
+  // -------------------------------
+  // MORPH TARGETS / FACE
+  // -------------------------------
+
+  if (
+    object.isMesh &&
+    object.morphTargetInfluences
+  ) {
+
+    morphMeshes.push(object);
+
+  }
+
+});
+
+group.userData.bones =
+  bones;
+
+group.userData.morphMeshes =
+  morphMeshes;
+
+
+// ======================================
+// LOG BONES
+// ======================================
+
+console.log(
+  "Farmer GLB bones:",
+  Object.keys(bones)
+);
+
+
 // ======================================
 // GLB SKELETAL ANIMATION
 // ======================================
@@ -336,61 +400,66 @@ if (
   const mixer =
     new THREE.AnimationMixer(model);
 
-  const clips =
-    gltf.animations;
-const actions = [];
-
-// Find proper walking animation
-const walkClip =
-  clips.find(clip =>
-    /walk|walking|run|running|locomotion/i.test(
-      clip.name
-    )
-  );
-
-if (walkClip) {
-
-  const action =
-    mixer.clipAction(walkClip);
-
-  action.reset();
-  action.play();
-
-  actions.push(action);
-
-  console.log(
-    "Farmer WALK animation selected:",
-    walkClip.name
-  );
-
-} else {
-
-  console.warn(
-    "No WALK animation found. Available animations:",
-    clips.map(clip => clip.name)
-  );
-
-}
-
   group.userData.mixer =
     mixer;
 
-  group.userData.actions =
-    actions;
   console.log(
     "Farmer GLB animations:",
-    clips.map(
+    gltf.animations.map(
       clip => clip.name
     )
   );
 
-} else {
+
+  // ------------------------------------
+  // FIND WALK ANIMATION
+  // ------------------------------------
+
+  const walkClip =
+    gltf.animations.find(
+      clip =>
+        /walk|walking|run|running|locomotion|move/i
+          .test(clip.name)
+    );
+
+
+  if (walkClip) {
+
+    const action =
+      mixer.clipAction(
+        walkClip
+      );
+
+    action.reset();
+
+    action.enabled = true;
+
+    action.setLoop(
+      THREE.LoopRepeat,
+      Infinity
+    );
+
+    action.play();
+
+    group.userData.walkAction =
+      action;
+
+    console.log(
+      "Farmer WALK animation:",
+      walkClip.name
+    );
+
+  }
+
+}
+else {
 
   console.warn(
-    "Farmer GLB has NO skeletal animations."
+    "Farmer GLB has no animation clips. Using procedural bone animation."
   );
 
 }
+
       // ======================================
       // AUTO FIT FARMER MODEL
       // ======================================
