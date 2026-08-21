@@ -2862,8 +2862,7 @@ animate(delta) {
           Math.sin(
             time * 10
           ) * 0.035;
-
-// ======================================
+        // ======================================
 // CHARACTER PARTS
 // ======================================
 
@@ -2881,29 +2880,17 @@ actor.traverse(
     // Save original transform
     // --------------------------------
 
-    if (
-      !object.userData.walkBase
-    ) {
+    if (!object.userData.walkBase) {
 
       object.userData.walkBase = {
 
-        x:
-          object.position.x,
+        x: object.position.x,
+        y: object.position.y,
+        z: object.position.z,
 
-        y:
-          object.position.y,
-
-        z:
-          object.position.z,
-
-        rotationX:
-          object.rotation.x,
-
-        rotationY:
-          object.rotation.y,
-
-        rotationZ:
-          object.rotation.z
+        rotationX: object.rotation.x,
+        rotationY: object.rotation.y,
+        rotationZ: object.rotation.z
 
       };
 
@@ -2925,15 +2912,11 @@ actor.traverse(
     ) {
 
       const side =
-        base.x < 0
-          ? -1
-          : 1;
+        base.x < 0 ? -1 : 1;
 
       object.rotation.z =
         base.rotationZ +
-        side *
-        walk *
-        0.55;
+        side * walk * 0.55;
 
     }
 
@@ -2950,15 +2933,11 @@ actor.traverse(
     ) {
 
       const side =
-        base.x < 0
-          ? -1
-          : 1;
+        base.x < 0 ? -1 : 1;
 
       object.rotation.z =
         base.rotationZ +
-        side *
-        walkOpposite *
-        0.50;
+        side * walkOpposite * 0.50;
 
     }
 
@@ -2975,34 +2954,26 @@ actor.traverse(
     ) {
 
       const side =
-        base.x < 0
-          ? -1
-          : 1;
+        base.x < 0 ? -1 : 1;
 
       object.position.y =
         base.y +
         Math.abs(
           Math.sin(
             time * 10 +
-            (
-              side < 0
-                ? 0
-                : Math.PI
-            )
+            (side < 0 ? 0 : Math.PI)
           )
         ) * 0.07;
 
       object.rotation.z =
         base.rotationZ +
-        side *
-        walkOpposite *
-        0.25;
+        side * walkOpposite * 0.25;
 
     }
 
 
     // ==================================
-    // FACE / HEAD MOVEMENT
+    // FACE / HEAD
     // ==================================
 
     else if (
@@ -3012,43 +2983,31 @@ actor.traverse(
 
       object.position.y =
         base.y +
-        Math.sin(
-          time * 5
-        ) * 0.025;
+        Math.sin(time * 5) * 0.025;
 
       object.rotation.x =
         base.rotationX +
-        Math.sin(
-          time * 5
-        ) * 0.025;
+        Math.sin(time * 5) * 0.025;
 
       object.rotation.y =
         base.rotationY +
-        Math.sin(
-          time * 3
-        ) * 0.018;
+        Math.sin(time * 3) * 0.018;
 
     }
 
   }
 );
 
-      // ======================================
-      // NONE
-      // ======================================
+} else {
 
-      else {
+  // ======================================
+  // NONE
+  // ======================================
 
-        actor.position.y = 0;
+  actor.position.y = 0;
+  actor.rotation.y = 0;
 
-        actor.rotation.y = 0;
-
-      }
-
-    }
-  );
-
-
+}
   // ========================================
   // CAMERA
   // ========================================
