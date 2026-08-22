@@ -2846,36 +2846,42 @@ animate(delta) {
             this.elapsed / duration,
             1
           );
-
         // ======================================
         // GLB CHARACTER
         // ======================================
 
-if (actor.userData.isGLB) {
+        if (actor.userData.isGLB) {
 
-  // ==================================
-  // GLB ANIMATION
-  // ==================================
+          if (actor.userData.mixer) {
+            actor.userData.mixer.update(delta);
+          }
 
-  if (actor.userData.mixer) {
+          actor.position.z = -5 + (12 * progress);
+          actor.position.y = 0;
+          actor.rotation.y = 0;
 
-    actor.userData.mixer.update(
-      delta
-    );
+        }
 
-  }
+        // ======================================
+        // CARTOON CHARACTER MOVEMENT
+        // ======================================
 
-  // ==================================
-  // MOVE FARMER FORWARD
-  // ==================================
+        else {
 
-  actor.position.z =
-    4 * progress;
+          actor.position.z = 4 * progress;
 
-  actor.position.y = 0;
+          actor.position.y =
+            Math.abs(
+              Math.sin(
+                time * 10
+              )
+            ) * 0.06;
 
-  return;
-}
+          actor.rotation.y =
+            Math.sin(
+              time * 10
+            ) * 0.035;
+
         // ======================================
         // CARTOON CHARACTER MOVEMENT
         // ======================================
