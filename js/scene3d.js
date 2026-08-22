@@ -2851,24 +2851,31 @@ animate(delta) {
         // GLB CHARACTER
         // ======================================
 
-        if (actor.userData.isGLB) {
+if (actor.userData.isGLB) {
 
-          if (actor.userData.mixer) {
+  // ==================================
+  // GLB ANIMATION
+  // ==================================
 
-            actor.userData.mixer.update(
-              delta
-            );
+  if (actor.userData.mixer) {
 
-          }
+    actor.userData.mixer.update(
+      delta
+    );
 
-          actor.position.z =
-            4 * progress;
+  }
 
-          actor.position.y = 0;
+  // ==================================
+  // MOVE FARMER FORWARD
+  // ==================================
 
-          return;
-        }
+  actor.position.z =
+    4 * progress;
 
+  actor.position.y = 0;
+
+  return;
+}
         // ======================================
         // CARTOON CHARACTER MOVEMENT
         // ======================================
